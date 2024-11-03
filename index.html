@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <title>Mapa com Múltiplos Pontos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa com Rota</title>
+    <!-- CSS do Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
         #map {
             height: 500px;
@@ -11,10 +14,32 @@
     </style>
 </head>
 <body>
-    <h3>Mapa com Múltiplos Pontos</h3>
+    <h2>Mapa com Rota</h2>
     <div id="map"></div>
-    
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwl4hBjY8XgTR5oyZsGjwZKWlhgOg8H5g"></script>
-    <script src="script.js"></script>
+
+    <!-- JavaScript do Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Plugin de roteamento do Leaflet -->
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+
+    <script>
+        // Inicializa o mapa
+        const map = L.map('map').setView([-23.55052, -46.633308], 5); // Localização inicial no Brasil
+
+        // Adiciona o tile layer do OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Adiciona o controle de roteamento
+        L.Routing.control({
+            waypoints: [
+                L.latLng(-23.55052, -46.633308), // Ponto inicial em São Paulo
+                L.latLng(-22.906847, -43.172896) // Ponto final no Rio de Janeiro
+            ],
+            routeWhileDragging: true // Permite arrastar a rota no mapa
+        }).addTo(map);
+    </script>
 </body>
 </html>
