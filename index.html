@@ -3,28 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa com Rota</title>
+    <title>Mapa de Abaré</title>
     <!-- CSS do Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
+        /* Estilos para fazer o mapa ocupar 100% da tela */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
         #map {
-            height: 500px;
+            height: 100%;
             width: 100%;
         }
     </style>
 </head>
 <body>
-    <h2>Mapa com Rota</h2>
     <div id="map"></div>
 
     <!-- JavaScript do Leaflet -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <!-- Plugin de roteamento do Leaflet -->
-    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
 
     <script>
         // Inicializa o mapa
-        const map = L.map('map').setView([-23.55052, -46.633308], 5); // Localização inicial no Brasil
+        const map = L.map('map').setView([-8.7209, -39.1164], 13); // Coordenadas aproximadas de Abaré
 
         // Adiciona o tile layer do OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -32,14 +37,41 @@
             attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Adiciona o controle de roteamento
-        L.Routing.control({
-            waypoints: [
-                L.latLng(-23.55052, -46.633308), // Ponto inicial em São Paulo
-                L.latLng(-22.906847, -43.172896) // Ponto final no Rio de Janeiro
-            ],
-            routeWhileDragging: true // Permite arrastar a rota no mapa
-        }).addTo(map);
+        // Função para adicionar marcadores
+        function addMarker(lat, lng, popupText) {
+            return L.marker([lat, lng]).bindPopup(popupText);
+        }
+
+        // Array de localizações
+        const locations = [
+            { lat: -8.7280635, lng: -39.1135806, name: "Josineide" },
+            { lat: -8.7276978, lng: -39.1167649, name: "Laurenco" },
+            { lat: -8.9406683, lng: -39.3256146, name: "Maria Elivaneide" },
+            { lat: -8.7023036, lng: -39.2536209, name: "Rosana Barbosa" },
+            { lat: -8.6340718, lng: -39.2516846, name: "Jolzeneide" },
+            { lat: -8.9672935, lng: -39.3114013, name: "Maria Jerluce" },
+            { lat: -8.7260915, lng: -39.1130991, name: "Antonio Teixeira" },
+            { lat: -8.9413348, lng: -39.3251055, name: "Maisa da Silva" },
+            { lat: -8.7237673, lng: -39.1113954, name: "xxxxxxxxxxxxx" },
+            { lat: -8.7027414, lng: -39.255629, name: "Neilde de Jesus" },
+            { lat: -8.9673293, lng: -39.3114078, name: "Jeovania" },
+            { lat: -9.122313, lng: -39.3490303, name: "Edeltrudes" },
+            { lat: -8.9670967, lng: -39.3113733, name: "Jaine" },
+            { lat: -8.7280346, lng: -39.1135844, name: "Edineuza" },
+            { lat: -8.6350979, lng: -39.2540299, name: "Jerlane" },
+            { lat: -8.6337836, lng: -39.2513054, name: "Edinaide" },
+            { lat: -8.7001058, lng: -39.256645, name: "Josiene" }
+        ];
+
+        // Adicionando os marcadores ao mapa e criando um bounds
+        const bounds = L.latLngBounds();
+        locations.forEach(location => {
+            const marker = addMarker(location.lat, location.lng, location.name).addTo(map);
+            bounds.extend(marker.getLatLng());
+        });
+
+        // Ajusta o mapa para mostrar todos os marcadores
+        map.fitBounds(bounds);
     </script>
 </body>
 </html>
