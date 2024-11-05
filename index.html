@@ -24,32 +24,11 @@
             font-size: 18px;
             margin-left: 8px;
         }
-        /* Estilos para os ícones coloridos */
-        .marker-green {
-            background-color: #28a745;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-        }
-        .marker-blue {
-            background-color: #007bff;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-        }
-        .marker-red {
-            background-color: #dc3545;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-        }
     </style>
 </head>
 <body>
     <div id="map"></div>
+
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
     <script>
@@ -60,17 +39,8 @@
             attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Função para criar ícones personalizados
-        function createCustomIcon(colorClass) {
-            return L.divIcon({
-                className: colorClass,
-                iconSize: [20, 20],
-                popupAnchor: [0, -10]
-            });
-        }
-
         // Função para adicionar marcadores com ícones personalizados
-        function addMarker(lat, lng, popupText, whatsappNumber, icon) {
+        function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
             const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
             const whatsappLink = `https://wa.me/${whatsappNumber}`;
             const popupContent = `
@@ -81,21 +51,44 @@
                     </a>
                 </div>
             `;
+
+            const icon = L.icon({
+                iconUrl: iconUrl,
+                iconSize: [25, 41], // Tamanho do ícone
+                iconAnchor: [12, 41], // Ponto onde o ícone se alinha com a coordenada
+                popupAnchor: [0, -41] // Ponto de ancoragem do popup em relação ao ícone
+            });
+
             const marker = L.marker([lat, lng], { icon: icon }).addTo(map).bindPopup(popupContent);
             return marker;
         }
 
-        // Array de localizações com ícones personalizados
+        // Array de localizações com números de WhatsApp e cor de pino
         const locations = [
-            { lat: -8.7260915, lng: -39.1130991, name: "Josielma dos Santos Souza", whatsapp: "5575999148469", icon: createCustomIcon('marker-green') },
-            { lat: -8.723593, lng: -39.111614, name: "Alzineide", whatsapp: "5575998096343", icon: createCustomIcon('marker-blue') },
-            { lat: -8.9406683, lng: -39.3256146, name: "Maria Elivaneide", whatsapp: "5575998187142", icon: createCustomIcon('marker-red') },
-            // Adicione mais localizações com ícones personalizados aqui
+            { lat: -8.7260915, lng: -39.1130991, name: "Josielma dos Santos Souza", whatsapp: "5575999148469", color: 'green' },
+            { lat: -8.723593, lng: -39.111614, name: "Alzineide", whatsapp: "5575998096343", color: 'blue' },
+            { lat: -8.9406683, lng: -39.3256146, name: "Maria Elivaneide", whatsapp: "5575998187142", color: 'red' },
+            // Adicione mais localizações conforme necessário
         ];
 
+        // Carregar cada marcador com o ícone correspondente
         const bounds = L.latLngBounds();
         locations.forEach(location => {
-            const marker = addMarker(location.lat, location.lng, location.name, location.whatsapp, location.icon);
+            let iconUrl;
+            switch (location.color) {
+                case 'green':
+                    iconUrl = 'marker_green.png';
+                    break;
+                case 'blue':
+                    iconUrl = 'marker_blue.png';
+                    break;
+                case 'red':
+                    iconUrl = 'marker_red.png';
+                    break;
+                default:
+                    iconUrl = 'marker_blue.png'; // Cor padrão caso não seja especificada
+            }
+            const marker = addCustomMarker(location.lat, location.lng, location.name, location.whatsapp, iconUrl);
             bounds.extend(marker.getLatLng());
         });
 
