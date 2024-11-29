@@ -63,46 +63,75 @@
             return marker;
         }
 
+        // Função para processar as coordenadas
+        function parseCoordinates(coordString) {
+            const [lat, lng] = coordString.split(',').map(Number);
+            return { lat, lng };
+        }
+
         // Array de localizações com números de WhatsApp e cor de pino
         const locations = [
-            
             // Grupo 1 - Próximos de -8.72 e -39.11
-            { lat: -8.7260915, lng: -39.1130991, name: "Josielma dos Santos Souza", whatsapp: "5575999148469", color: 'red' },
-            { lat: -8.723593, lng: -39.111614, name: "Alzineide", whatsapp: "5575998096343", color: 'red' },
+            {coords: "-10.982892, -39.623280", name: "Raimunda Barreto dos Santos", whatsapp: "5575999656474", color: 'red'},
+            {coords: "-10.973739, -39.622806", name: "Lenilda Carneiro", whatsapp: "5575998875098", color: 'red'},
+            {coords: "-11.0563086, -39.8575014", name: "Ardiles Silva de Souza", whatsapp: "5575999145704", color: 'red'},
+            {coords: "-10.7810679, -39.6386147", name: "Cecilia Maria da Cruz Santos", whatsapp: "5575997110022", color: 'red'},
+            {coords: "-10.9725229, -39.6225989", name: "Rosilene de Jesus Silva", whatsapp: "5575998875098", color: 'red'},
+            {coords: "-10.8514207, -39.5667008", name: "Jose Luis Ferreira da Silva", whatsapp: "5575999487279", color: 'red'},
+            {coords: "-10.989718, -39.6209606", name: "Tamara de Souza Silva", whatsapp: "5575998672665", color: 'red'},
+            {coords: "-10.9735971, -39.6254345", name: "Leticia de Jesus da Silva", whatsapp: "5575999237218", color: 'red'},
 
-            // Grupo 4 - Próximos de -8.94 e -39.32
-            { lat: -8.9406683, lng: -39.3256146, name: "Maria Elivaneide", whatsapp: "5575998187142" },
-            { lat: -8.9413348, lng: -39.3251055, name: "Maisa da Silva", whatsapp: "5571999971240" },
-            { lat: -8.941398, lng: -39.325092, name: "Ari Carlos", whatsapp: "5575999083761" },
-            { lat: -8.9411169, lng: -39.3285152, name: "Barbara Priscila", whatsapp: "5575998493992" },
-            { lat: -8.9672935, lng: -39.3114013, name: "Maria Jerluce", whatsapp: "5575999604829", color: 'red' },
-            { lat: -8.9673293, lng: -39.3114078, name: "Jeovania", whatsapp: "5574999177284" },
-            { lat: -8.9670967, lng: -39.3113733, name: "Jaine", whatsapp: "5575998349276" },
+            {coords: "-10.9765789,-39.6295088", name: "Silene de Jesus Barreto", whatsapp: "5575999823281", color: 'red'},
 
-            // Grupo 5 - Próximos de -8.93 e -39.39
-            { lat: -8.935881, lng: -39.394356, name: "Maria Aparecida", whatsapp: "5575999662822" },
-            { lat: -8.938835, lng: -39.400620, name: "Rita de Cássia", whatsapp: "5575999260798" },
-            { lat: -8.938828, lng: -39.400631, name: "Maria do Socorro", whatsapp: "5575999288044", color: 'red' },
+            {coords: "-10.976041,-39.623547", name: "Joelma Neri de Jesus", whatsapp: "5575998610548", color: 'red'},
 
-            // Grupo 6 - Próximos de -8.68 e -39.39
-            { lat: -8.693433, lng: -39.399857, name: "Claudionor", whatsapp: "5575998879177", color: 'red' },
-            { lat: -8.6886953, lng: -39.3991591, name: "Luciana Maria", whatsapp: "55879991751900", color: 'red' },
+            {coords: "-10.9869498,-39.7384749", name: "Mariana dos santos Silva", whatsapp: "5575997007283", color: 'red'},
 
-            // Outros
-            { lat: -8.838923, lng: -39.24677, name: "Luiz Nery", whatsapp: "5575998449017" },
-            { lat: -8.866621, lng: -39.285610, name: "Joseilton Barbosa", whatsapp: "5575997116933" },
-            { lat: -8.830145, lng: -39.121407, name: "Benedito Barbosa", whatsapp: "5575998319423" },
-            { lat: -8.622906, lng: -39.383736, name: "Gilvonete", whatsapp: "5575998598857", color: 'red' },
-            { lat: -8.970883, lng: -39.364986, name: "Claudeane", whatsapp: "5571996846022" },
-            { lat: -9.122313, lng: -39.3490303, name: "Edeltrudes", whatsapp: "5575998761328" },
-            { lat: -8.636554, lng: -39.303043, name: "Roniel Edinaldo", whatsapp: "55987981364969", color: 'red' },
-            { lat: -8.9409787, lng: -39.3254145, name: "Edineide Andrade dos Santos", whatsapp: "75999545953", color: 'red' }
-            // Adicione mais localizações conforme necessário
+            {coords: "-10.917719, -39.932456", name: "Pedro Novaes de Souza", whatsapp: "+557582879183", color: 'red'},
+            
+            {coords: "-10.9721104,-39.6264511", name: "Aldira Queiroz dos Santos Silva", whatsapp: "+557598334517", color: 'red'},
+
+            {coords: "-11.068948, -39.628216", name: "Maria Vilma dos Santos Lima", whatsapp: "+557597142896", color: 'red'},
+            
+            {coords: "-10.9100349,-39.6055867", name: "Carlucia Nunes da Silva", whatsapp: "+557598469130", color: 'red'},
+
+            {coords: "-10.983463,-39.622259", name: "Joana da Silva Lima Santos", whatsapp: "+557599025228", color: 'red'},
+
+            {coords: "-11.053121, -39.858106", name: "Maria José de Jesus", whatsapp: "+557599073361", color: 'red'},
+
+            {coords: "-10.9565024,-39.6037797", name: "Dilma Nunes dos Santos", whatsapp: "+557597145158", color: 'red'},
+
+            {coords: "-10.8094953,-39.6583278", name: "Rodrigo dos Santos Araujo", whatsapp: "+557598701313", color: 'red'},
+
+            {coords: "-10.9687224,-39.6224233", name: "Goncalo de Jesus Silva", whatsapp: "+557599749121", color: 'red'},
+
+            {coords: "-11.0709421,-39.6321831", name: "Viviane Santos Silva", whatsapp: "+557597076186", color: 'red'},
+
+            {coords: "-11.121732, -39.582360", name: "Lilian da Silva Santos", whatsapp: "+557599716227", color: 'red'},
+
+            {coords: "-11.0084867,-39.8435883", name: "Claudio Alves Brotto", whatsapp: "+557598449088", color: 'red'},
+
+            {coords: "-10.9824632,-39.6405562", name: "Deisiele Silva do Carmo", whatsapp: "+557599192550", color: 'red'},
+
+            {coords: "-10.977668, -39.680623", name: "Cremilda Neres Barbosa", whatsapp: "+557199797656", color: 'red'},
+
+            {coords: "-11.0709421,-39.6321831", name: "Vivivane Santos Silva", whatsapp: "+557597076186", color: 'red'},
+
+            {coords: "-10.788883, -39.657024", name: "Bernadete Lima dos Santos", whatsapp: "+557599736487", color: 'red'},
+
+
+
+            {coords: "-11.052756, -39.857670", name: "Eliene Oliveira Fernandes", whatsapp: "5575997043147", color: 'red'},
+
+            //{coords: "xxxxxxxxx", name: "xxxxxxxxx", whatsapp: "xxxxxxxxxxx", color: 'red'},
+           
+            
         ];
 
         // Carregar cada marcador com o ícone correspondente
         const bounds = L.latLngBounds();
         locations.forEach(location => {
+            const { lat, lng } = parseCoordinates(location.coords);
             let iconUrl;
             switch (location.color) {
                 case 'green':
@@ -117,7 +146,7 @@
                 default:
                     iconUrl = 'marker_blue.png'; // Cor padrão caso não seja especificada
             }
-            const marker = addCustomMarker(location.lat, location.lng, location.name, location.whatsapp, iconUrl);
+            const marker = addCustomMarker(lat, lng, location.name, location.whatsapp, iconUrl);
             bounds.extend(marker.getLatLng());
         });
 
