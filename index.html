@@ -1,145 +1,117 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rota EAF</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compartilhamento de Localização</title>
 
-    <!-- Configurações para PWA -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#007bff">
+  <!-- Referência aos estilos do Leaflet (CDN) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-sA+e4w72KD7cWMTx7ZyKl6AflXb6Sv9z+8KfI2v+EIM="
+    crossorigin=""
+  />
+  
+  <!-- Ícones e Manifest -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icon-192x192.png">
 
-    <!-- Configurações para iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Rota EAF">
-    <link rel="apple-touch-icon" href="icon-192x192.png">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
 
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-        }
-        #map {
-            height: 100%;
-            width: 100%;
-        }
-        .current-location-marker {
-            width: 15px;
-            height: 15px;
-            background: rgba(0, 123, 255, 0.8);
-            border: 2px solid white;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
-            }
-            50% {
-                box-shadow: 0 0 20px rgba(0, 123, 255, 0.4);
-            }
-            100% {
-                box-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
-            }
-        }
-        .whatsapp-link {
-            display: inline-block;
-            text-decoration: none;
-            color: #25D366;
-            font-size: 18px;
-            margin-left: 8px;
-        }
-    </style>
+    #map {
+      width: 100%;
+      height: 100vh;
+    }
+
+    #share-location {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #share-location:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-    <div id="map"></div>
+  <div id="map"></div>
+  <button id="share-location">Compartilhar Localização</button>
 
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script>
-        let map;
+  <!-- Referência ao script do Leaflet (CDN) -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-oAkkCDHNp4onfm85QpDG2e7d0XMsVRPogWqxGhE2RMw="
+    crossorigin=""
+  ></script>
 
-        function initializeMap(lat, lng, zoom = 13) {
-            map = L.map('map').setView([lat, lng], zoom);
+  <script>
+    // Inicializa o mapa
+    const map = L.map('map').setView([0, 0], 13);
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
-            }).addTo(map);
+    // Adiciona o tile do mapa
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    // Adiciona marcador
+    let marker = L.marker([0, 0]).addTo(map);
+
+    // Atualiza a localização
+    function updateLocation(lat, lng) {
+      const newLatLng = new L.LatLng(lat, lng);
+      marker.setLatLng(newLatLng);
+      map.setView(newLatLng, 16);
+    }
+
+    // Compartilha a localização no WhatsApp
+    function shareLocation(lat, lng) {
+      const whatsappNumber = "5581999999999"; // Substitua pelo número desejado
+      const message = `Minha localização: https://www.google.com/maps?q=${lat},${lng}`;
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+
+    // Botão de compartilhamento
+    document.getElementById('share-location').addEventListener('click', () => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          shareLocation(latitude, longitude);
+        },
+        (error) => {
+          alert('Erro ao acessar a localização.');
+          console.error(error);
         }
+      );
+    });
 
-        function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
-            const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-            const whatsappLink = `https://wa.me/${whatsappNumber}`;
-            const popupContent = `
-                <div>
-                    <a href="${googleMapsLink}" target="_blank">${popupText}</a>
-                    <a href="${whatsappLink}" target="_blank" class="whatsapp-link" title="Conversar no WhatsApp">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" width="20" height="20">
-                    </a>
-                </div>
-            `;
-
-            const icon = L.icon({
-                iconUrl: iconUrl,
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [0, -41]
-            });
-
-            L.marker([lat, lng], { icon: icon }).addTo(map).bindPopup(popupContent);
-        }
-
-        function parseCoordinates(coordString) {
-            const [lat, lng] = coordString.split(',').map(Number);
-            return { lat, lng };
-        }
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    initializeMap(latitude, longitude);
-
-                    const customIcon = L.divIcon({
-                        className: 'current-location-marker',
-                        iconSize: [20, 20]
-                    });
-
-                    L.marker([latitude, longitude], { icon: customIcon })
-                        .addTo(map)
-                        .bindPopup("Você está aqui.")
-                        .openPopup();
-
-                    loadMarkers();
-                },
-                () => {
-                    initializeMap(-10.805398, -39.638981);
-                    loadMarkers();
-                }
-            );
-        } else {
-            initializeMap(-10.805398, -39.638981);
-            loadMarkers();
-        }
-
-        function loadMarkers() {
-            const locations = [
-                {coords: "-10.9100349,-39.6055867", name: "Carlucia Nunes da Silva", whatsapp: "+557598469130", color: 'red'},
-                {coords: "-12.0518549,-40.2370165", name: "Maria Jose Ribeiro Teles", whatsapp: "5574999177227", color: 'red'}
-            ];
-
-            locations.forEach(location => {
-                const { lat, lng } = parseCoordinates(location.coords);
-                const iconUrl = `marker_${location.color}.png`;
-                addCustomMarker(lat, lng, location.name, location.whatsapp, iconUrl);
-            });
-        }
-    </script>
+    // Localiza automaticamente
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        updateLocation(latitude, longitude);
+      },
+      (error) => {
+        alert('Erro ao acessar a localização.');
+        console.error(error);
+      }
+    );
+      //xxxx
+      
+  </script>
 </body>
 </html>
