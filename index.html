@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rota EAF</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <!-- Configurações para PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#007bff">
+
+    <!-- Configurações para iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Rota EAF">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+
     <style>
         body, html {
             margin: 0;
@@ -53,7 +64,6 @@
     <script>
         let map;
 
-        // Função para inicializar o mapa
         function initializeMap(lat, lng, zoom = 13) {
             map = L.map('map').setView([lat, lng], zoom);
 
@@ -63,7 +73,6 @@
             }).addTo(map);
         }
 
-        // Função para adicionar marcadores com ícones personalizados
         function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
             const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
             const whatsappLink = `https://wa.me/${whatsappNumber}`;
@@ -83,26 +92,20 @@
                 popupAnchor: [0, -41]
             });
 
-            const marker = L.marker([lat, lng], { icon: icon }).addTo(map).bindPopup(popupContent);
-            return marker;
+            L.marker([lat, lng], { icon: icon }).addTo(map).bindPopup(popupContent);
         }
 
-        // Função para processar as coordenadas
         function parseCoordinates(coordString) {
             const [lat, lng] = coordString.split(',').map(Number);
             return { lat, lng };
         }
 
-        // Tentar obter localização atual
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
-
-                    // Inicializar mapa com localização atual
                     initializeMap(latitude, longitude);
 
-                    // Adicionar marcador de localização atual
                     const customIcon = L.divIcon({
                         className: 'current-location-marker',
                         iconSize: [20, 20]
@@ -113,71 +116,27 @@
                         .bindPopup("Você está aqui.")
                         .openPopup();
 
-                    // Adicionar outros marcadores do array
                     loadMarkers();
                 },
-                (error) => {
-                    console.error("Erro ao obter localização atual:", error);
-
-                    // Inicializar mapa com fallback para um local padrão
+                () => {
                     initializeMap(-10.805398, -39.638981);
                     loadMarkers();
                 }
             );
         } else {
-            alert("Geolocalização não é suportada pelo navegador.");
             initializeMap(-10.805398, -39.638981);
             loadMarkers();
         }
 
-        // Carregar marcadores do array
         function loadMarkers() {
             const locations = [
                 {coords: "-10.9100349,-39.6055867", name: "Carlucia Nunes da Silva", whatsapp: "+557598469130", color: 'red'},
-                {coords: "-10.920019, -39.600666", name: "Francisco Jesus Da Silva", whatsapp: "5575999202960", color: 'red'},
-                {coords: "-10.9824632,-39.6405562", name: "Deisiele Silva do Carmo", whatsapp: "+557599192550", color: 'red'},
-
-                {coords: "-11.8492260, -40.1825330", name: "Maria Aparecida Venancio Da Silva", whatsapp: "5574999005540", color: 'blue'},
-                {coords: "-11.868079, -40.248466", name: "Adenil Araujo Brito", whatsapp: "5574999731394", color: 'blue'},
-                {coords: "-11.8692358, -40.2449708", name: "Rosine Soares Da Silva", whatsapp: "5574991240158", color: 'blue'},
-                {coords: "-11.8924053, -40.1899436", name: "Helenita Soares De Oliveira", whatsapp: "5574999789296", color: 'blue'},
-                {coords: "-11.8946491,-40.168451", name: "Maria Helena Alves Da Silva", whatsapp: "5574998182405", color: 'blue'},
-                {coords: "-11.9750270, -40.1175920", name: "Gislandia Brito Costa", whatsapp: "5574999501112", color: 'blue'},
-                {coords: "-11.9782750, -40.0863910", name: "Aline Oliveira Carneiro", whatsapp: "5574999378570", color: 'blue'},
-                {coords: "-11.9791580, -40.1398190", name: "Rafaela Dos Santos Silva", whatsapp: "5574999165484", color: 'blue'},
-                {coords: "-11.9827989,-40.2782557", name: "Valdelice Santana Lima", whatsapp: "5574999539222", color: 'red'},
-                {coords: "-11.9881967,-40.1480626", name: "Juscimara Silva Almeida", whatsapp: "5574999550593", color: 'red'},
-                {coords: "-11.988406, -40.288313", name: "Nilza Silva Sousa", whatsapp: "5574999323815", color: 'red'},
-                {coords: "-12.0409860, -40.0882650", name: "Sandra De Assis Santana", whatsapp: "5574999754015", color: 'green'},
-                {coords: "-12.0439050, -40,2160670", name: "Iraneide Silva Dos Santos", whatsapp: "5574999964037", color: 'blue'},
-                {coords: "-12.046449, -40.090622", name: "Silvana Santana Araujo", whatsapp: "5574999890166", color: 'green'},
-                {coords: "-12.0518549,-40.2370165", name: "Maria Jose Ribeiro Teles", whatsapp: "5574999177227", color: 'red'},
-                {coords: "-12.052534, -40.059453", name: "Silvania Dos Santos Batista", whatsapp: "5574999424762", color: 'green'},
-                {coords: "-12.054632, -40.260233", name: "Aulene Oliveira Dias", whatsapp: "5574999850358", color: 'red'},
-                {coords: "-12.064388, -40.196714", name: "Elisania De Oliveira Alves", whatsapp: "5574999149047", color: 'red'},
-                {coords: "-12.081844, -40.078062", name: "Veranice Goncalves Cerqueira", whatsapp: "5574999456326", color: 'green'},
-                {coords: "-12.082975, -40.202690", name: "Juscivanda Moreira Ferreira", whatsapp: "5574998108115", color: 'red'},
-                {coords: "-12.085682, -40.073128", name: "Maria Lucia Nascimento Sales", whatsapp: "5574999122581", color: 'green'},
-
-                
+                {coords: "-12.0518549,-40.2370165", name: "Maria Jose Ribeiro Teles", whatsapp: "5574999177227", color: 'red'}
             ];
 
             locations.forEach(location => {
                 const { lat, lng } = parseCoordinates(location.coords);
-                let iconUrl;
-                switch (location.color) {
-                    case 'green':
-                        iconUrl = 'marker_green.png';
-                        break;
-                    case 'blue':
-                        iconUrl = 'marker_blue.png';
-                        break;
-                    case 'red':
-                        iconUrl = 'marker_red.png';
-                        break;
-                    default:
-                        iconUrl = 'marker_blue.png';
-                }
+                const iconUrl = `marker_${location.color}.png`;
                 addCustomMarker(lat, lng, location.name, location.whatsapp, iconUrl);
             });
         }
