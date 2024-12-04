@@ -1,117 +1,170 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Compartilhamento de Localização</title>
-
-  <!-- Referência aos estilos do Leaflet (CDN) -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-sA+e4w72KD7cWMTx7ZyKl6AflXb6Sv9z+8KfI2v+EIM="
-    crossorigin=""
-  />
-  
-  <!-- Ícones e Manifest -->
-  <link rel="manifest" href="./manifest.json">
-  <link rel="apple-touch-icon" href="./icon-192x192.png">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    #map {
-      width: 100%;
-      height: 100vh;
-    }
-
-    #share-location {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #share-location:hover {
-      background-color: #0056b3;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rota EAF</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        .current-location-marker {
+            width: 15px;
+            height: 15px;
+            background: rgba(0, 123, 255, 0.8);
+            border: 2px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(0, 123, 255, 0.4);
+            }
+            100% {
+                box-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+            }
+        }
+        .whatsapp-link {
+            display: inline-block;
+            text-decoration: none;
+            color: #25D366;
+            font-size: 18px;
+            margin-left: 8px;
+        }
+    </style>
 </head>
 <body>
-  <div id="map"></div>
-  <button id="share-location">Compartilhar Localização</button>
+    <div id="map"></div>
 
-  <!-- Referência ao script do Leaflet (CDN) -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-oAkkCDHNp4onfm85QpDG2e7d0XMsVRPogWqxGhE2RMw="
-    crossorigin=""
-  ></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        let map;
 
-  <script>
-    // Inicializa o mapa
-    const map = L.map('map').setView([0, 0], 13);
+        // Função para inicializar o mapa
+        function initializeMap(lat, lng, zoom = 13) {
+            map = L.map('map').setView([lat, lng], zoom);
 
-    // Adiciona o tile do mapa
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(map);
-
-    // Adiciona marcador
-    let marker = L.marker([0, 0]).addTo(map);
-
-    // Atualiza a localização
-    function updateLocation(lat, lng) {
-      const newLatLng = new L.LatLng(lat, lng);
-      marker.setLatLng(newLatLng);
-      map.setView(newLatLng, 16);
-    }
-
-    // Compartilha a localização no WhatsApp
-    function shareLocation(lat, lng) {
-      const whatsappNumber = "5581999999999"; // Substitua pelo número desejado
-      const message = `Minha localização: https://www.google.com/maps?q=${lat},${lng}`;
-      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-    }
-
-    // Botão de compartilhamento
-    document.getElementById('share-location').addEventListener('click', () => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          shareLocation(latitude, longitude);
-        },
-        (error) => {
-          alert('Erro ao acessar a localização.');
-          console.error(error);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+            }).addTo(map);
         }
-      );
-    });
 
-    // Localiza automaticamente
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        updateLocation(latitude, longitude);
-      },
-      (error) => {
-        alert('Erro ao acessar a localização.');
-        console.error(error);
-      }
-    );
-      //xxxx
-      
-  </script>
+        // Função para adicionar marcadores com ícones personalizados
+        function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
+            const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            const whatsappLink = `https://wa.me/${whatsappNumber}`;
+            const popupContent = `
+                <div>
+                    <a href="${googleMapsLink}" target="_blank">${popupText}</a>
+                    <a href="${whatsappLink}" target="_blank" class="whatsapp-link" title="Conversar no WhatsApp">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" width="20" height="20">
+                    </a>
+                </div>
+            `;
+
+            const icon = L.icon({
+                iconUrl: iconUrl,
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [0, -41]
+            });
+
+            const marker = L.marker([lat, lng], { icon: icon }).addTo(map).bindPopup(popupContent);
+            return marker;
+        }
+
+        // Função para processar as coordenadas
+        function parseCoordinates(coordString) {
+            const [lat, lng] = coordString.split(',').map(Number);
+            return { lat, lng };
+        }
+
+        // Tentar obter localização atual
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+
+                    // Inicializar mapa com localização atual
+                    initializeMap(latitude, longitude);
+
+                    // Adicionar marcador de localização atual
+                    const customIcon = L.divIcon({
+                        className: 'current-location-marker',
+                        iconSize: [20, 20]
+                    });
+
+                    L.marker([latitude, longitude], { icon: customIcon })
+                        .addTo(map)
+                        .bindPopup("Você está aqui.")
+                        .openPopup();
+
+                    // Adicionar outros marcadores do array
+                    loadMarkers();
+                },
+                (error) => {
+                    console.error("Erro ao obter localização atual:", error);
+
+                    // Inicializar mapa com fallback para um local padrão
+                    initializeMap(-10.805398, -39.638981);
+                    loadMarkers();
+                }
+            );
+        } else {
+            alert("Geolocalização não é suportada pelo navegador.");
+            initializeMap(-10.805398, -39.638981);
+            loadMarkers();
+        }
+
+        // Carregar marcadores do array
+        function loadMarkers() {
+            const locations = [
+                {coords: "-11.586874, -38.291797", name: "Lucineia Xavier Silva", whatsapp: "5575991507367", color: 'red'},
+                {coords: "-11.588838,-38.310478", name: "Priscila De Carvalho Silva Lima", whatsapp: "5575999000580", color: 'red'},
+                {coords: "-11.492373, -38.265415", name: "Ismael Miranda Xavier", whatsapp: "5575997113228", color: 'red'},
+                {coords: "-11.549068, -38.292797", name: "Crispiniana Bispo Pereira", whatsapp: "5575991055338", color: 'red'},
+                {coords: "-11.451556, -38.466944", name: "Aldeci Oliveira Santos", whatsapp: "5575999337238", color: 'red'},
+                {coords: "-11.366991, -38.334448", name: "Heloisa Paraizo De Jesus", whatsapp: "5575999222243", color: 'red'},
+                {coords: "-11.400695,-38.253561", name: "Maria Valdenice De Matos Brito", whatsapp: "5575997064554", color: 'red'},
+                {coords: "-11.351561,-38.323725", name: "Maria Arenilda Matos Dos Santos", whatsapp: "5575998260324", color: 'red'},
+                {coords: "-11.354587,-38324659", name: "Marlene De Matos Cruz", whatsapp: "5579999132266", color: 'red'},
+                {coords: "-11.553366, -38.291467", name: "Maria Zelia Batista De Souza Santos", whatsapp: "5575992774606", color: 'red'},
+                {coords: "-11.398549,-38.253314", name: "Aline Santana De Brito", whatsapp: "5575998154202", color: 'red'},  
+            ];
+
+            locations.forEach(location => {
+                const { lat, lng } = parseCoordinates(location.coords);
+                let iconUrl;
+                switch (location.color) {
+                    case 'green':
+                        iconUrl = 'marker_green.png';
+                        break;
+                    case 'blue':
+                        iconUrl = 'marker_blue.png';
+                        break;
+                    case 'red':
+                        iconUrl = 'marker_red.png';
+                        break;
+                    default:
+                        iconUrl = 'marker_blue.png';
+                }
+                addCustomMarker(lat, lng, location.name, location.whatsapp, iconUrl);
+            });
+        }
+    </script>
 </body>
 </html>
