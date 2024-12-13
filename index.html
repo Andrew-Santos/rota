@@ -44,6 +44,12 @@
             font-size: 18px;
             margin-left: 8px;
         }
+        .navigation-links a {
+            display: block;
+            margin: 5px 0;
+            text-decoration: none;
+            color: #007bff;
+        }
     </style>
 </head>
 <body>
@@ -63,13 +69,21 @@
             }).addTo(map);
         }
 
-        // Função para adicionar marcadores com ícones personalizados
+        // Função para adicionar marcadores com popup para seleção de apps
         function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
             const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            const appleMapsLink = `https://maps.apple.com/?daddr=${lat},${lng}`;
+            const wazeLink = `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`;
             const whatsappLink = `https://wa.me/${whatsappNumber}`;
+
             const popupContent = `
                 <div>
-                    <a href="${googleMapsLink}" target="_blank">${popupText}</a>
+                    <p><strong>${popupText}</strong></p>
+                    <div class="navigation-links">
+                        <a href="${googleMapsLink}" target="_blank">Google Maps</a>
+                        <a href="${appleMapsLink}" target="_blank">Apple Maps</a>
+                        <a href="${wazeLink}" target="_blank">Waze</a>
+                    </div>
                     <a href="${whatsappLink}" target="_blank" class="whatsapp-link" title="Conversar no WhatsApp">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" width="20" height="20">
                     </a>
@@ -133,7 +147,6 @@
         // Carregar marcadores do array
         function loadMarkers() {
             const locations = [
-
                 {coords: "-10.984207,-39.697202", name: "Ana Rita Rocha Da Silva", whatsapp: "5575998693936", color: 'red'},
                 {coords: "-11.242656,-39.742241", name: "Cristiane Florencia De Jesus", whatsapp: "5575998744026", color: 'red'},
                 {coords: "-10.977082,-39.635126", name: "Jose Pereira De Souza", whatsapp: "5575999048571", color: 'red'},
