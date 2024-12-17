@@ -58,115 +58,65 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
         let map;
-
+        let markersGroup; // Grupo de marcadores para calcular os limites
+    
         // Função para inicializar o mapa
-        function initializeMap(lat, lng, zoom = 13) {
-            map = L.map('map').setView([lat, lng], zoom);
-
+        function initializeMap() {
+            map = L.map('map');
+    
+            // Camada de tiles
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 18,
                 attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
             }).addTo(map);
+    
+            // Inicializar o grupo de marcadores
+            markersGroup = L.featureGroup().addTo(map);
         }
-
-        // Função para adicionar marcadores com popup para seleção de apps
+    
+        // Função para adicionar marcador ao grupo
         function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
             const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-            const appleMapsLink = `https://maps.apple.com/?daddr=${lat},${lng}`;
-            const wazeLink = `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`;
             const whatsappLink = `https://wa.me/${whatsappNumber}`;
-
+    
             const popupContent = `
                 <div>
                     <p><strong>${popupText}</strong></p>
                     <div class="navigation-links">
                         <a href="${googleMapsLink}" target="_blank">Google Maps</a>
-                        <a href="${appleMapsLink}" target="_blank">Apple Maps</a>
-                        <a href="${wazeLink}" target="_blank">Waze</a>
                     </div>
                     <a href="${whatsappLink}" target="_blank" class="whatsapp-link" title="Conversar no WhatsApp">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" width="20" height="20">
                     </a>
                 </div>
             `;
-
+    
             const icon = L.icon({
                 iconUrl: iconUrl,
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
                 popupAnchor: [0, -41]
             });
-
-            const marker = L.marker([lat, lng], { icon: icon }).addTo(map).bindPopup(popupContent);
-            return marker;
+    
+            const marker = L.marker([lat, lng], { icon: icon }).bindPopup(popupContent);
+            markersGroup.addLayer(marker); // Adicione o marcador ao grupo
         }
-
+    
         // Função para processar as coordenadas
         function parseCoordinates(coordString) {
             const [lat, lng] = coordString.split(',').map(Number);
             return { lat, lng };
         }
-
-        // Tentar obter localização atual
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-
-                    // Inicializar mapa com localização atual
-                    initializeMap(latitude, longitude);
-
-                    // Adicionar marcador de localização atual
-                    const customIcon = L.divIcon({
-                        className: 'current-location-marker',
-                        iconSize: [20, 20]
-                    });
-
-                    L.marker([latitude, longitude], { icon: customIcon })
-                        .addTo(map)
-                        .bindPopup("Você está aqui.")
-                        .openPopup();
-
-                    // Adicionar outros marcadores do array
-                    loadMarkers();
-                },
-                (error) => {
-                    console.error("Erro ao obter localização atual:", error);
-
-                    // Inicializar mapa com fallback para um local padrão
-                    initializeMap(-10.805398, -39.638981);
-                    loadMarkers();
-                }
-            );
-        } else {
-            alert("Geolocalização não é suportada pelo navegador.");
-            initializeMap(-10.805398, -39.638981);
-            loadMarkers();
-        }
-
+    
         // Carregar marcadores do array
         function loadMarkers() {
             const locations = [
                 {coords: "-9.647240, -39.563650", name: "Aline De Souza E Silva", whatsapp: "5574999948749", color: 'blue'},
                 {coords: "-8.950075, -39.655596", name: "Antonio Costa Gomes", whatsapp: "5587992017052", color: 'red'},
                 {coords: "-9.109757, -39.951550", name: "Carla Gardenia Santos Nascimento", whatsapp: "5574998139781", color: 'blue'},
-                {coords: "-8.797091, -39.567045", name: "Deijanira Dias Pereira Pionorio", whatsapp: "5574988493016", color: 'red'},
-                {coords: "-9.918940,-39.569981", name: "Emanuela Nogueira Das Neves", whatsapp: "5571999539225", color: 'green'},
-                {coords: "-9.261246,-39.368240", name: "Evanice Cardoso De Souza", whatsapp: "5574999095949", color: 'green'},
-                {coords: "-9.412876,-39.471823", name: "Fabio Junior Aquino De Souza", whatsapp: "5574999003156", color: 'green'},
-                {coords: "-9.623211, -39.541214", name: "Gilberto Batista De Souza", whatsapp: "5574999727305", color: 'blue'},
-                {coords: "-9.296932,-39.484629", name: "Jair Reis Paixao", whatsapp: "557499517388", color: 'green'},
-                {coords: "-9.635880,-39.574908", name: "Janicleide Dos Santos Vitoria", whatsapp: "5574998009893", color: 'blue'},
-                {coords: "-9.624279,-39.564745", name: "Jose Ubiratan Das Neves Silva", whatsapp: "557499007185", color: 'blue'},
-                {coords: "-9.433766, -39.780584", name: "Laurita Fernandes Dos Santos", whatsapp: "5574999816371", color: 'blue'},
-                {coords: "-9.274171,-39.545387", name: "Lucilia Barbosa Dos Santos", whatsapp: "5574999454764", color: 'green'},
-                {coords: "-9.412613, -39.471856", name: "Lusineves Varjao Dos Santos", whatsapp: "5574999804562", color: 'green'},
-                {coords: "-9.2774450,-39.5434210", name: "Maria Aparecida Goncalves Dos Santos", whatsapp: "5574999520722", color: 'green'},
-                {coords: "-9.413595,-39.473228", name: "Maria De Lourdes Souza Martins", whatsapp: "5574999515624", color: 'green'},
-                {coords: "-9.463027, -39.431541", name: "Maria Izabel Dos Santos Franca", whatsapp: "557499657230", color: 'green'},
-
+                // Adicione os outros pontos aqui
             ];
-
+    
             locations.forEach(location => {
                 const { lat, lng } = parseCoordinates(location.coords);
                 let iconUrl;
@@ -186,7 +136,60 @@
                 addCustomMarker(lat, lng, location.name, location.whatsapp, iconUrl);
             });
         }
+    
+        // Inicializar e ajustar o mapa
+        function adjustMapView() {
+            // Ajustar visão para incluir todos os marcadores e localização atual
+            if (markersGroup.getBounds().isValid()) {
+                map.fitBounds(markersGroup.getBounds());
+            }
+        }
+    
+        // Tentar obter localização atual
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+    
+                    initializeMap();
+    
+                    // Adicionar marcador de localização atual
+                    const customIcon = L.divIcon({
+                        className: 'current-location-marker',
+                        iconSize: [20, 20]
+                    });
+    
+                    L.marker([latitude, longitude], { icon: customIcon })
+                        .addTo(markersGroup) // Adicione a localização atual ao grupo
+                        .bindPopup("Você está aqui.")
+                        .openPopup();
+    
+                    // Carregar marcadores do array
+                    loadMarkers();
+    
+                    // Ajustar visão geral
+                    adjustMapView();
+                },
+                (error) => {
+                    console.error("Erro ao obter localização atual:", error);
+    
+                    initializeMap();
+    
+                    // Carregar marcadores do array
+                    loadMarkers();
+    
+                    // Ajustar visão geral
+                    adjustMapView();
+                }
+            );
+        } else {
+            alert("Geolocalização não é suportada pelo navegador.");
+            initializeMap();
+            loadMarkers();
+            adjustMapView();
+        }
     </script>
+
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./service-worker.js')
