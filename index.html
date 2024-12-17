@@ -82,10 +82,13 @@
             const popupContent = `
                 <div>
                     <p><strong>${popupText}</strong></p>
+                    <p><strong>Coordenadas:</strong> 
+                        <span class="coordinates">${lat.toFixed(6)}, ${lng.toFixed(6)}</span>
+                    </p>
                     <div class="navigation-links">
-                        <a href="${googleMapsLink}" target="_blank">Google Maps</a>
+                        <a href="${googleMapsLink}" target="_blank">Abrir no Google Maps</a>
                     </div>
-                    <a href="${whatsappLink}" target="_blank" class="whatsapp-link" title="Conversar no WhatsApp">
+                    <a href="${whatsappLink}" target="_blank" class="whatsapp-link" title="Enviar pelo WhatsApp">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" width="20" height="20">
                     </a>
                 </div>
