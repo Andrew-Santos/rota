@@ -296,6 +296,41 @@
                 });
         }
     </script>
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        let map;
+        let satelliteLayer;
+        let markersGroup;
+
+        // Função de inicialização do mapa
+        function initializeMap() {
+            map = L.map('map').setView([51.505, -0.09], 13); // Define o centro inicial e o zoom do mapa
+
+            // Camada de mapa padrão (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Camada de satélite
+            satelliteLayer = L.tileLayer('https://{s}.satellite.openstreetmap.org/{z}/{x}/{y}.jpg', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
+
+            // Inicializar o grupo de marcadores
+            markersGroup = L.featureGroup().addTo(map);
+
+            // Adicionar o controle para alternar entre as camadas
+            L.control.layers({
+                "Mapa Normal": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+                "Visão Satélite": satelliteLayer
+            }).addTo(map);
+        }
+
+        // Chama a função para inicializar o mapa
+        initializeMap();
+    </script>
     
 
 </body>
