@@ -1,99 +1,305 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8"> <!-- Define o conjunto de caracteres para o HTML -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Torna o site responsivo em dispositivos móveis -->
-    <title>Rota EAF</title> <!-- Título da página -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" /> <!-- Link para o CSS do Leaflet -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rota EAF</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
         body, html {
-            margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; /* Remove margens e configura o tamanho da tela */
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
         }
         #map {
-            height: 100%; width: 100%; /* Define o tamanho do mapa */
+            height: 100%;
+            width: 100%;
         }
         .current-location-marker {
-            width: 15px; height: 15px; background: rgba(0, 123, 255, 0.8); border: 2px solid white; border-radius: 50%; box-shadow: 0 0 10px rgba(0, 123, 255, 0.8); animation: pulse 1.5s infinite;
+            width: 15px;
+            height: 15px;
+            background: rgba(0, 123, 255, 0.8);
+            border: 2px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+            animation: pulse 1.5s infinite;
         }
         @keyframes pulse {
-            0% { box-shadow: 0 0 10px rgba(0, 123, 255, 0.8); }
-            50% { box-shadow: 0 0 20px rgba(0, 123, 255, 0.4); }
-            100% { box-shadow: 0 0 10px rgba(0, 123, 255, 0.8); }
+            0% {
+                box-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(0, 123, 255, 0.4);
+            }
+            100% {
+                box-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+            }
         }
         .whatsapp-link {
-            display: inline-block; text-decoration: none; color: #25D366; font-size: 18px; margin-left: 8px; /* Estilo do link do WhatsApp */
+            display: inline-block;
+            text-decoration: none;
+            color: #25D366;
+            font-size: 18px;
+            margin-left: 8px;
         }
         .navigation-links a {
-            display: block; margin: 5px 0; text-decoration: none; color: #007bff; /* Estilo dos links de navegação */
+            display: block;
+            margin: 5px 0;
+            text-decoration: none;
+            color: #007bff;
         }
     </style>
 </head>
 <body>
-    <div id="map"></div> <!-- Div onde o mapa será renderizado -->
+    <div id="map"></div>
 
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script> <!-- Script para o Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        let map; let markersGroup; // Declaração de variáveis para o mapa e grupo de marcadores
+        let map;
+        let markersGroup; // Grupo de marcadores para calcular os limites
     
-        function initializeMap() { // Função para inicializar o mapa
-            map = L.map('map'); // Cria o mapa dentro da div com id "map"
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { // Adiciona camada de tiles do OpenStreetMap
+        // Função para inicializar o mapa
+        function initializeMap() {
+            map = L.map('map');
+    
+            // Camada de tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 18,
                 attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
             }).addTo(map);
-            markersGroup = L.featureGroup().addTo(map); // Inicializa o grupo de marcadores
+    
+            // Inicializar o grupo de marcadores
+            markersGroup = L.featureGroup().addTo(map);
         }
     
-        function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) { // Função para adicionar um marcador customizado
-            const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`; // Link do Google Maps
-            const whatsappLink = `https://wa.me/${whatsappNumber}`; // Link do WhatsApp
+        // Função para adicionar marcador ao grupo
+        function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
+            const googleMapsLink = https://www.google.com/maps/dir/?api=1&destination=${lat},${lng};
+            const whatsappLink = https://wa.me/${whatsappNumber};
     
-            const popupContent = ` <!-- Conteúdo do popup no marcador -->
+            const popupContent = 
                 <div>
                     <p><strong>${popupText}</strong></p>
-                    <p><strong><span class="coordinates">${lat.toFixed(6)}, ${lng.toFixed(6)}</span></strong></p>
+                    <p> 
+                        <strong><span class="coordinates">${lat.toFixed(6)}, ${lng.toFixed(6)}</span></strong>
+                    </p>
                     <div class="navigation-links">
-                        <a href="${googleMapsLink}" target="_blank">Abrir no Google Maps</a> <!-- Link para abrir no Google Maps -->
+                        <a href="${googleMapsLink}" target="_blank">Abrir no Google Maps</a>
                     </div>
-                    <a href="${whatsappLink}" target="_blank" class="whatsapp-link" title="Enviar pelo WhatsApp"> <!-- Link para WhatsApp -->
+                    <a href="${whatsappLink}" target="_blank" class="whatsapp-link" title="Enviar pelo WhatsApp"> 
                         <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" width="20" height="20">
                     </a>
                 </div>
-            `;
+            ;
     
-            const icon = L.icon({ // Cria o ícone customizado
+            const icon = L.icon({
                 iconUrl: iconUrl,
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
                 popupAnchor: [0, -41]
             });
     
-            const marker = L.marker([lat, lng], { icon: icon }).bindPopup(popupContent); // Cria o marcador com o ícone e popup
-            markersGroup.addLayer(marker); // Adiciona o marcador ao grupo
+            const marker = L.marker([lat, lng], { icon: icon }).bindPopup(popupContent);
+            markersGroup.addLayer(marker); // Adicione o marcador ao grupo
         }
     
-        function parseCoordinates(coordString) { // Função para processar a string de coordenadas
+        // Função para processar as coordenadas
+        function parseCoordinates(coordString) {
             const [lat, lng] = coordString.split(',').map(Number);
             return { lat, lng };
         }
     
-        function loadMarkers() { // Função para carregar os marcadores a partir de um array
-            const locations = [ /* Array de locais com coordenadas, nome, número do WhatsApp e cor */
+        // Carregar marcadores do array
+        function loadMarkers() {
+            const locations = [
                 {coords: "-8.569179,-39.453277", name: "Adenilson Barbosa Leal", whatsapp: "5587996550908", color: 'green'},
                 {coords: "-8.5458480, -39.3589860", name: "Adriana Lima Dos Santos", whatsapp: "558799901728", color: 'red'},
                 {coords: "-8.5428540,-39.4034980", name: "Adriana Rodrigues De Santana", whatsapp: "5587991885061", color: 'red'},
                 {coords: "-8.702702,-39.445132", name: "Alessandra Ribeiro Barbosa", whatsapp: "558791540780", color: 'green'},
                 {coords: "-9.647240, -39.563650", name: "Aline De Souza E Silva", whatsapp: "5574999948749", color: 'green'},
-                // Restante dos locais...
+                {coords: "-8.6952180, -39.4473070", name: "Ana Suely Cruz Felix", whatsapp: "5587991015434", color: 'green'},
+                {coords: "-8.652480, -39.459213", name: "Andrelina Barbosa Da Anunciacao", whatsapp: "5587996271149", color: 'green'},
+                {coords: "-8.662266, -39.635510", name: "Andressa Santos Araujo", whatsapp: "5587991526381", color: 'red'},
+                {coords: "-8.6953630, -39.4471880", name: "Angela Cruz Felix", whatsapp: "5587991121747", color: 'green'},
+                {coords: "-8.950075, -39.655596", name: "Antonio Costa Gomes", whatsapp: "5587992017052", color: 'green'},
+                {coords: "-8.988610, -39.903304", name: "Benilda Ribeiro Gomes", whatsapp: "5574999455166", color: 'green'},
+                {coords: "-8.697126,-39.475280", name: "Benivaldo Dias Dos Santos", whatsapp: "5587999285320", color: 'green'},
+                {coords: "-8.543497,-39.398664", name: "Bianca Dos Santos", whatsapp: "5587991478395", color: 'red'},
+                {coords: "-9.109757, -39.951550", name: "Carla Gardenia Santos Nascimento", whatsapp: "5574998139781", color: 'green'},
+                {coords: "-8.988795, -39.903804", name: "Claudemar Mesquita Rodrigues", whatsapp: "5574988097181", color: 'green'},
+                {coords: "-8.569179, -39.453277", name: "Cleonilde Barbosa Leal", whatsapp: "5587996550908", color: 'green'},
+                {coords: "-8.653040,-39.546300", name: "Cremilda Soares Silva Santos", whatsapp: "5587996167667", color: 'red'},
+                {coords: "-8.650682,-39.458927", name: "Darcilene Vicente Da Silva", whatsapp: "5587996786016", color: 'green'},
+                {coords: "-8.650682,-39.458927", name: "Darliane Mesquita De Franca", whatsapp: "5574999689731", color: 'green'},
+                {coords: "-8.761912,-39.664994", name: "Deijane Alves De Souza", whatsapp: "5574988663486", color: 'red'},
+                {coords: "-8.797091, -39.567045", name: "Deijanira Dias Pereira Pionorio", whatsapp: "5574988493016", color: 'green'},
+                {coords: "-9.002669, -39.902843", name: "Eduarda Helise Rosa Guimaraes", whatsapp: "5574999805202", color: 'green'},
+                {coords: "-8.998926, -39.900333", name: "Elizangela Oliveira Da Conceicao", whatsapp: "557499829574", color: 'green'},
+                {coords: "-9.918940,-39.569981", name: "Emanuela Nogueira Das Neves", whatsapp: "5571999539225", color: 'green'},
+                {coords: "-8.771049, -39.661929", name: "Eva Gomes De Carvalho", whatsapp: "5574981431214", color: 'red'},
+                {coords: "-9.261246,-39.368240", name: "Evanice Cardoso De Souza", whatsapp: "5574999095949", color: 'green'},
+                {coords: "-9.412876,-39.471823", name: "Fabio Junior Aquino De Souza", whatsapp: "5574999003156", color: 'green'},
+                {coords: "-8.568025, -39.454086", name: "Francineia Maria Da Silva Barbalho", whatsapp: "557491357437", color: 'red'},
+                {coords: "-8.697605, -39.474236", name: "Geicy Mirelly Dos Santos Silva", whatsapp: "5574991892457", color: 'green'},
+                {coords: "-9.623211, -39.541214", name: "Gilberto Batista De Souza", whatsapp: "5574999727305", color: 'green'},
+                {coords: "-8.854582,-39.901234", name: "Gilberto Dias Da Silva", whatsapp: "5574991176833", color: 'red'},
+                {coords: "-8.568277,-39.453505", name: "Ivanildo Barbosa Dos Santos", whatsapp: "5587991874881", color: 'red'},
+                {coords: "-8.992646,-39.899103", name: "Ivone Regina Da Silva Santos", whatsapp: "5574988129991", color: 'green'},
+                {coords: "-8.696578, -39.682715", name: "Jacilma Da Conceicao Santos", whatsapp: "5587991320084", color: 'red'},
+                {coords: "-8.776583,-39.667600", name: "Jaffia Pereira Lima", whatsapp: "5587981592940", color: 'red'},
+                {coords: "-8.665159,-39.538563", name: "Jailson Barbosa Siqueira", whatsapp: "5587996030861", color: 'green'},
+                {coords: "-9.296932,-39.484629", name: "Jair Reis Paixao", whatsapp: "557499517388", color: 'green'},
+                {coords: "-8.805726,-39.720561", name: "Jairo Teles Dos Santos", whatsapp: "5587991232240", color: 'green'},
+                {coords: "-8.988500,-39.903378", name: "Janaina Pereira Da Silva", whatsapp: "5574981237736", color: 'green'},
+                {coords: "-9.635880,-39.574908", name: "Janicleide Dos Santos Vitoria", whatsapp: "5574998009893", color: 'green'},
+                {coords: "-8.999876, -39.898015", name: "Jaqueline Da Silva Paixao", whatsapp: "5574999838309", color: 'green'},
+                {coords: "-8.693903, -39.683048", name: "Jemerson Marinho Da Cruz", whatsapp: "5587991538566", color: 'red'},
+                {coords: "-8.805154, -39.755298", name: "Jenice Lopes Da Costa", whatsapp: "5587988568571", color: 'red'},
+                {coords: "-8.990393,-39.901466", name: "Joao Cleofas Dias Pereira Junior", whatsapp: "5574981352671", color: 'green'},
+                {coords: "-8.652345,-39.457715", name: "Jose Luiz Da Silva", whatsapp: "5587996388329", color: 'green'},
+                {coords: "-9.624279,-39.564745", name: "Jose Ubiratan Das Neves Silva", whatsapp: "557499007185", color: 'green'},
+                {coords: "-8.989045,-39.898548", name: "Josefa Alves Dos Santos", whatsapp: "5574981189293", color: 'green'},
+                {coords: "-8.664510, -39.456069", name: "Joselia Soares Barbosa", whatsapp: "558791022241", color: 'green'},
+                {coords: "-8.662475, -39.637791", name: "Joselita Conceicao Da Silva", whatsapp: "5587996465155", color: 'red'},
+                {coords: "-8.646183,-39.571706", name: "Karla Lima Ferreira", whatsapp: "5587999999043", color: 'red'},
+                {coords: "-9.433766, -39.780584", name: "Laurita Fernandes Dos Santos", whatsapp: "5574999816371", color: 'green'},
+                {coords: "-9.274171,-39.545387", name: "Lucilia Barbosa Dos Santos", whatsapp: "5574999454764", color: 'green'},
+                {coords: "-9.412613, -39.471856", name: "Lusineves Varjao Dos Santos", whatsapp: "5574999804562", color: 'green'},
+                {coords: "-8.569179, -39.453277", name: "Luzia Barbosa Da Silva", whatsapp: "5587996550908", color: 'red'},
+                {coords: "-8.775910,-39.664342", name: "Luzineide Alves Da Silva", whatsapp: "557481296334", color: 'red'},
+                {coords: "-8.769056, -39.648694", name: "Maiara Reis Oliveira", whatsapp: "5574981534209", color: 'red'},
+                {coords: "-8.985922,-39.904594", name: "Marcia Pereira Da Silva", whatsapp: "557499209039", color: 'green'},
+                {coords: "-9.2774450,-39.5434210", name: "Maria Aparecida Goncalves Dos Santos", whatsapp: "5574999520722", color: 'green'},
+                {coords: "-9.001031,-39.893403", name: "Maria Aparecida Pereira Da Silva", whatsapp: "5574999546649", color: 'green'},
+                {coords: "-8.801885, -39.757203", name: "Maria Auxiliadora Da Conceicao Santos", whatsapp: "5587981237107", color: 'red'},
+                {coords: "-8.777716,-39.669560", name: "Maria Cleonice Alves De Oliveira", whatsapp: "5574981425982", color: 'green'},
+                {coords: "-8.822558,-39.867970", name: "Maria Das Gracas De Vasconcelos Ribeiro", whatsapp: "5574999818299", color: 'red'},
+                {coords: "-9.413595,-39.473228", name: "Maria De Lourdes Souza Martins", whatsapp: "5574999515624", color: 'green'},
+                {coords: "-8.777696,-39.665508", name: "Maria Do Socorro Pereira Feitosa", whatsapp: "5574981352622", color: 'red'},
+                {coords: "-8.665532,-39.538489", name: "Maria Evangelista Dias De Souza", whatsapp: "5587999639811", color: 'green'},
+                {coords: "-8.692801, -39.432524", name: "Maria Geilde Soares", whatsapp: "5587981483780", color: 'green'},
+                {coords: "-9.463027, -39.431541", name: "Maria Izabel Dos Santos Franca", whatsapp: "557499657230", color: 'green'},
+                {coords: "-8.568272, -39.452556", name: "Maria Julia Da Silva", whatsapp: "5587999974997", color: 'red'},
+                {coords: "-8.996977, -39.905640", name: "Marineide Dos Santos Martins", whatsapp: "5574999354737", color: 'green'},
+                {coords: "-8.714860, -39.678971", name: "Mariza Santos Da Rocha", whatsapp: "5587991248569", color: 'red'},
+                {coords: "-8.655469, -39.551651", name: "Milene Alves Dos Santos", whatsapp: "5587981551302", color: 'red'},
+                {coords: "-8.658937,-39.471227", name: "Mirelly Alves Da Silva", whatsapp: "5587999612485", color: 'green'},
+                {coords: "-8.623017, -39.546565", name: "Ozana Rodrigues Da Silva", whatsapp: "558799082570", color: 'red'},
+                {coords: "-8.777716,-39.669560", name: "Ozilda Oliveira Dos Santos Silva", whatsapp: "5574981484204", color: 'red'},
+                {coords: "-8.999435, -39.895239", name: "Palmira Laranjeira Dos Santos", whatsapp: "5574998109005", color: 'green'},
+                {coords: "-8.803181,-39.756605", name: "Patricia Conceicao Alves", whatsapp: "5587988311240", color: 'red'},
+                {coords: "-8.568628,-39.453221", name: "Rafaela Felix Barbosa", whatsapp: "5587996219707", color: 'red'},
+                {coords: "-8.805845,-39.720569", name: "Raimunda Teles Nunes", whatsapp: "5587991727079", color: 'red'},
+                {coords: "-8.775762,-39.663974", name: "Regiane Pereira Da Silva", whatsapp: "5574988616538", color: 'red'},
+                {coords: "-9.002552, -39.903097", name: "Romario Soares De Oliveira", whatsapp: "5574999713936", color: 'green'},
+                {coords: "-8.607548,-39.514058", name: "Ronilton Manoel Da Silva", whatsapp: "5587999858166", color: 'red'},
+                {coords: "-8.775712, -39.668333", name: "Roseane Dos Santos Carlos", whatsapp: "5574981048815", color: 'red'},
+                {coords: "-8.652059, -39.457424", name: "Rosimeire Maria Alves Da Silva", whatsapp: "5575997142078", color: 'green'},
+                {coords: "-8.696107,-39.476219", name: "Silvanilda Alves Da Silva", whatsapp: "5587996226884", color: 'green'},
+                {coords: "-8.620535,-39.535915", name: "Uilliane Abades Goncalves", whatsapp: "5587999774179", color: 'red'},
             ];
-            locations.forEach(location => { // Itera sobre o array de locais
-                const { lat, lng } = parseCoordinates(location.coords); // Converte a string de coordenadas para números
-                addCustomMarker(lat, lng, location.name, location.whatsapp, `https://example.com/icons/${location.color}.png`); // Adiciona o marcador
+    
+            locations.forEach(location => {
+                const { lat, lng } = parseCoordinates(location.coords);
+                let iconUrl;
+                switch (location.color) {
+                    case 'green':
+                        iconUrl = 'marker_green.png';
+                        break;
+                    case 'blue':
+                        iconUrl = 'marker_blue.png';
+                        break;
+                    case 'red':
+                        iconUrl = 'marker_red.png';
+                        break;
+                    default:
+                        iconUrl = 'marker_blue.png';
+                }
+                addCustomMarker(lat, lng, location.name, location.whatsapp, iconUrl);
             });
         }
     
-        initializeMap(); // Inicializa o mapa ao carregar a página
-        loadMarkers(); // Carrega os marcadores
+        // Inicializar e ajustar o mapa
+        function adjustMapView() {
+            // Ajustar visão para incluir todos os marcadores e localização atual
+            if (markersGroup.getBounds().isValid()) {
+                map.fitBounds(markersGroup.getBounds());
+            }
+        }
+    
+        // Tentar obter localização atual
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+    
+                    initializeMap();
+    
+                    // Adicionar marcador de localização atual
+                    const customIcon = L.divIcon({
+                        className: 'current-location-marker',
+                        iconSize: [20, 20]
+                    });
+    
+                    L.marker([latitude, longitude], { icon: customIcon })
+                        .addTo(markersGroup) // Adicione a localização atual ao grupo
+                        .bindPopup("Você está aqui.")
+                        .openPopup();
+    
+                    // Carregar marcadores do array
+                    loadMarkers();
+    
+                    // Ajustar visão geral
+                    adjustMapView();
+                },
+                (error) => {
+                    console.error("Erro ao obter localização atual:", error);
+    
+                    initializeMap();
+    
+                    // Carregar marcadores do array
+                    loadMarkers();
+    
+                    // Ajustar visão geral
+                    adjustMapView();
+                }
+            );
+        } else {
+            alert("Geolocalização não é suportada pelo navegador.");
+            initializeMap();
+            loadMarkers();
+            adjustMapView();
+        }
     </script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registrado com sucesso:', registration);
+                })
+                .catch(error => {
+                    console.error('Erro ao registrar o Service Worker:', error);
+                });
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registrado com sucesso:', registration);
+                })
+                .catch(error => {
+                    console.error('Erro ao registrar o Service Worker:', error);
+                });
+        }
+
+        //1310
+    </script>
+
+    
+
 </body>
 </html>
