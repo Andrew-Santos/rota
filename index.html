@@ -76,10 +76,10 @@
     
         // Função para adicionar marcador ao grupo
         function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
-            const googleMapsLink = https://www.google.com/maps/dir/?api=1&destination=${lat},${lng};
-            const whatsappLink = https://wa.me/${whatsappNumber};
+            const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            const whatsappLink = `https://wa.me/${whatsappNumber}`;
     
-            const popupContent = 
+            const popupContent = `
                 <div>
                     <p><strong>${popupText}</strong></p>
                     <p> 
@@ -92,7 +92,7 @@
                         <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" width="20" height="20">
                     </a>
                 </div>
-            ;
+            `;
     
             const icon = L.icon({
                 iconUrl: iconUrl,
