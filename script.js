@@ -1,5 +1,6 @@
 let map;
-let markersGroup; // Grupo de marcadores para calcular os limites
+let markersGroup;
+let userMarker;
 
 // Função para inicializar o mapa
 function initializeMap() {
@@ -55,6 +56,7 @@ function loadMarkers() {
     const locations = [
         {coords: "-11.076811, -38.644735", name: "Maria Giceli Da Conceicao", whatsapp: "5575992187075", color: 'green'},
         {coords: "-11.1027204,-38.7197327", name: "Jamile Miranda Do Nascimento", whatsapp: "5575991751825", color: 'green'},
+        {coords: "-11.0623999,-38.8958385", name: "Maria Helena Souza Santos", whatsapp: "5575991621250", color: 'green'},
         {coords: "-10.9331603,-39.0353859", name: "Dara Santos Cosme", whatsapp: "5575992710137", color: 'green'},
         {coords: "-11.0156083,-38.98899", name: "Luciana Jesus Da Silva", whatsapp: "5575992649795", color: 'green'},
         {coords: "-10.9370599,-39.0467457", name: "Erica Matos Soares", whatsapp: "5575992102291", color: 'green'},
@@ -98,7 +100,27 @@ function adjustMapView() {
     }
 }
 
-// Tentar obter localização atual
+// Função para atualizar a posição do marcador do usuário em tempo real
+function updateUserLocation(lat, lng) {
+    if (userMarker) {
+        // Se o marcador já existe, apenas atualiza a posição
+        userMarker.setLatLng([lat, lng]);
+    } else {
+        // Caso contrário, cria um novo marcador para a localização
+        const customIcon = L.divIcon({
+            className: 'current-location-marker',
+            iconSize: [20, 20]
+        });
+
+        userMarker = L.marker([lat, lng], { icon: customIcon })
+            .addTo(markersGroup)
+            .bindPopup("Você está aqui.")
+            .openPopup();
+    }
+    map.setView([lat, lng], 15); // Ajusta a visão do mapa para o marcador
+}
+
+// Tentar obter localização atual e ativar a atualização em tempo real
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -107,21 +129,29 @@ if (navigator.geolocation) {
             initializeMap();
 
             // Adicionar marcador de localização atual
-            const customIcon = L.divIcon({
-                className: 'current-location-marker',
-                iconSize: [20, 20]
-            });
-
-            L.marker([latitude, longitude], { icon: customIcon })
-                .addTo(markersGroup) // Adiciona a localização atual ao grupo
-                .bindPopup("Você está aqui.")
-                .openPopup();
+            updateUserLocation(latitude, longitude);
 
             // Carregar marcadores do array
             loadMarkers();
 
             // Ajustar visão geral
             adjustMapView();
+
+            // Iniciar atualização em tempo real
+            navigator.geolocation.watchPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    updateUserLocation(latitude, longitude);
+                },
+                (error) => {
+                    console.error("Erro ao obter localização em tempo real:", error);
+                },
+                {
+                    enableHighAccuracy: true,
+                    maximumAge: 10000,
+                    timeout: 5000
+                }
+            );
         },
         (error) => {
             console.error("Erro ao obter localização atual:", error);
