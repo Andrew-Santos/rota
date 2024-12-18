@@ -7,3 +7,12 @@ body {
     height: 100vh;
     width: 100%;
 }
+
+/* Estilo para o marcador da localização do usuário */
+.current-location-marker {
+    background-color: red; /* Cor de fundo para destacar */
+    border-radius: 50%; /* Tornar o marcador redondo */
+    width: 20px;
+    height: 20px;
+    border: 2px solid white; /* Bordas brancas */
+}
