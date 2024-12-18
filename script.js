@@ -117,7 +117,8 @@ function updateUserLocation(lat, lng) {
             .bindPopup("Você está aqui.")
             .openPopup();
     }
-    //map.setView([lat, lng], 15); // Ajusta a visão do mapa para o marcador
+    // Ajusta a visão do mapa para o marcador
+    // map.setView([lat, lng], 15); 
 }
 
 // Tentar obter localização atual e ativar a atualização em tempo real
