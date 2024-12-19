@@ -60,7 +60,7 @@ function loadMarkers() {
         {coords: "-10.9331603,-39.0353859", name: "Dara Santos Cosme", whatsapp: "5575992710137", color: 'green'},
         {coords: "-11.0156083,-38.98899", name: "Luciana Jesus Da Silva", whatsapp: "5575992649795", color: 'green'},
         {coords: "-10.9370599,-39.0467457", name: "Erica Matos Soares", whatsapp: "5575992102291", color: 'green'},
-        {coords: "-10.9811224,-38.9321474", name: "Ivana Jesus Silva", whatsapp: "5575991170426", color: 'green'},
+        {coords: "-10.9747264,-38.9137615", name: "Ivana Jesus Silva", whatsapp: "5575991170426", color: 'green'},
         {coords: "-10.9714314,-38.9117919", name: "Iraides Jesus Da Silva", whatsapp: "5575991280520", color: 'green'},
         {coords: "-10.9335772,-39.0705657", name: "Celina Reis Dos Santos", whatsapp: "5575991667696", color: 'green'},
         {coords: "-11.0123388,-38.7569144", name: "Veronica Andrade Lima", whatsapp: "5575991750022", color: 'green'},
@@ -70,9 +70,11 @@ function loadMarkers() {
         {coords: "-11.0641497,-38.663744", name: "Maria Jose Santos De Jesus", whatsapp: "5575991700463", color: 'green'},
         {coords: "-11.1172724,-38.8060512", name: "Marinalva Sousa Santana", whatsapp: "5575992078857", color: 'green'},
         {coords: "-10.7409828,-38.8341876", name: "Josinete Andrade Silva", whatsapp: "5575991041586", color: 'green'},
+        {coords: "-11.060816, -38.837635", name: "Eledecia Dos Santos Pimentel", whatsapp: "5575992177035", color: 'green'},
         {coords: "-11.05971518298199,-38.91728298433505", name: "Juarez Carmo Matos", whatsapp: "5575992091146", color: 'green'},
+        {coords: "-10.996143, -38.763398", name: "Marizete Jesus Nunes", whatsapp: "5575991617798", color: 'green'},
+        {coords: "-11.099682, -38.905655", name: "Jose Carlos Jesus Dos Santos", whatsapp: "5575991596449", color: 'green'},
         {coords: "-11.140223, -38.908538", name: "Valquiria De Jesus Lima", whatsapp: "5575991007497", color: 'green'},
-
     ];
 
     locations.forEach(location => {
