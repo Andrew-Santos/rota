@@ -1,66 +1,45 @@
-const CACHE_NAME = 'offline-cache-v1'; // Nome do cache
-const ASSETS = [
-    './', // Cache o HTML
-    './index.html',
-    './style.css',
-    './script.js',
-    './marker_blue.png',
-    './marker_green.png',
-    './marker_red.png',
-    'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css',
-    'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js',
-    '/offline.html', // Página offline
+const CACHE_NAME = 'map-cache-v1';
+const URLS_TO_CACHE = [
+    '/', // Página inicial
+    '/index.html',
+    '/styles.css', // Substitua pelo nome do arquivo CSS do seu projeto
+    '/script.js',  // Substitua pelo nome do arquivo JavaScript principal
+    '/marker_blue.png', // Ícones utilizados
+    '/marker_green.png',
+    '/marker_red.png',
+    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js',
 ];
 
-// Instalar o Service Worker e cache dos recursos
-self.addEventListener('install', (event) => {
-    console.log('Service Worker instalado');
+// Instalando o Service Worker
+self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS);
+        caches.open(CACHE_NAME).then(cache => {
+            return cache.addAll(URLS_TO_CACHE);
         })
     );
 });
 
-// Ativar o Service Worker e limpar caches antigos
-self.addEventListener('activate', (event) => {
-    console.log('Service Worker ativado');
+// Respondendo com cache ou rede
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        caches.match(event.request).then(response => {
+            return response || fetch(event.request);
+        })
+    );
+});
+
+// Atualizando o cache quando necessário
+self.addEventListener('activate', event => {
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
+        caches.keys().then(cacheNames => {
             return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        return caches.delete(cacheName);
+                cacheNames.map(cache => {
+                    if (cache !== CACHE_NAME) {
+                        return caches.delete(cache);
                     }
                 })
             );
         })
     );
-});
-
-// Interceptar as requisições e fornecer respostas do cache ou da rede
-self.addEventListener('fetch', (event) => {
-    // Verificar se o navegador está online
-    if (navigator.onLine) {
-        // Se estiver online, tenta buscar os dados na rede
-        event.respondWith(
-            fetch(event.request).then((response) => {
-                // Armazene a resposta em cache para o futuro
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, response.clone());
-                });
-                return response;
-            }).catch(() => {
-                // Se a rede não estiver disponível, use o cache
-                return caches.match(event.request);
-            })
-        );
-    } else {
-        // Se estiver offline, use os dados do cache
-        event.respondWith(
-            caches.match(event.request).then((cachedResponse) => {
-                return cachedResponse || caches.match('/offline.html');
-            })
-        );
-    }
 });
