@@ -1,192 +1,102 @@
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js')
-            .then((registration) => {
-                console.log('Service Worker registrado com sucesso:', registration);
-            })
-            .catch((error) => {
-                console.error('Falha ao registrar o Service Worker:', error);
-            });
-    });
-}
-
-
-
 let map;
 let markersGroup;
 let userMarker;
 
-// Verificar conectividade com a internet
+// Verifica a conectividade com a internet
 function isOnline() {
-    return navigator.onLine;
+    return window.navigator.onLine;
 }
 
-// Inicializar o mapa
-function initializeMap(isCached = false) {
+// Inicializa o mapa
+function initializeMap() {
     map = L.map('map');
+    const tileLayerURL = isOnline()
+        ? 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        : './tiles/{z}/{x}/{y}.png'; // Fallback para tiles locais
 
-    if (isCached) {
-        // Camada de tiles em cache (deve ser configurada previamente)
-        L.tileLayer('./tiles/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: 'Map data © OpenStreetMap contributors (Cache)'
-        }).addTo(map);
-    } else {
-        // Camada de tiles online
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
-        }).addTo(map);
-    }
+    L.tileLayer(tileLayerURL, {
+        maxZoom: 18,
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
-    // Inicializar o grupo de marcadores
     markersGroup = L.featureGroup().addTo(map);
 }
 
-// Adicionar marcador personalizado
+// Adiciona marcadores personalizados
 function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
-    const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-    const whatsappLink = `https://wa.me/${whatsappNumber}`;
-
     const popupContent = `
         <div>
             <p><strong>${popupText}</strong></p>
             <p>${lat.toFixed(6)}, ${lng.toFixed(6)}</p>
-            <div class="navigation-links">
-                <a href="${googleMapsLink}" target="_blank">Abrir no Google Maps</a>
-            </div>
-            <a href="${whatsappLink}" target="_blank" class="whatsapp-link" title="Enviar pelo WhatsApp">${whatsappNumber} 
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" width="20" height="20">
-            </a>
+            <a href="https://wa.me/${whatsappNumber}" target="_blank">WhatsApp: ${whatsappNumber}</a>
         </div>
     `;
 
     const icon = L.icon({
         iconUrl: iconUrl,
         iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [0, -41]
+        iconAnchor: [12, 41]
     });
 
-    const marker = L.marker([lat, lng], { icon: icon }).bindPopup(popupContent);
+    const marker = L.marker([lat, lng], { icon }).bindPopup(popupContent);
     markersGroup.addLayer(marker);
 }
 
-// Processar coordenadas
-function parseCoordinates(coordString) {
-    const [lat, lng] = coordString.split(',').map(Number);
-    return { lat, lng };
-}
-
-// Carregar marcadores do array
+// Carrega os marcadores
 function loadMarkers() {
     const locations = [
-         {coords: "-10.7455323,-40.133743", name: "Adeilda Ferreira Silva", whatsapp: "5574999692974", color: 'green'},
-         {coords: "-10.7426642,-40.1266351", name: "Aldione Pereira Lopes", whatsapp: "5574999285354", color: 'green'},
-         {coords: "-10.7144355,-40.0757781", name: "Daniel De Jesus Silva", whatsapp: "5574999998924", color: 'green'},
-         {coords: "-10.757302, -40.079825", name: "Elioneide Dos Santos De Jesus", whatsapp: "5574999873340", color: 'green'},
-         {coords: "-10.7437109,-40.128308", name: "Jailma Anacleto Da Silva", whatsapp: "5574999249307", color: 'green'},
-         {coords: "-10.6505043,-40.2729803", name: "Jose De Jesus Claudio Pio", whatsapp: "5574991543777", color: 'green'},
-         {coords: "-10.736903, -40.123718", name: "Maria De Jesus Barboza", whatsapp: "5562998651713", color: 'green'},
-         {coords: "-10.7110053,-40.1262819", name: "Ozania Silva Costa Da Silva", whatsapp: "5574999585781", color: 'green'},
-         {coords: "-10.6240442,-40.0171033", name: "Suele Soares Dos Santos", whatsapp: "5574999886940", color: 'green'},
-         {coords: "-10.718211,-40.088367", name: "Tamires Do Nascimento Cruz", whatsapp: "5574998061636", color: 'green'},
-         {coords: "-10.7160923,-40.0433762", name: "Willian Da Silva Vitor", whatsapp: "5527996144049", color: 'red'},
-
+        { coords: "-10.7455323,-40.133743", name: "Adeilda Ferreira Silva", whatsapp: "5574999692974", color: 'green' },
+        { coords: "-10.7426642,-40.1266351", name: "Aldione Pereira Lopes", whatsapp: "5574999285354", color: 'green' },
+        // Adicione mais marcadores aqui
     ];
 
     locations.forEach(location => {
-        const { lat, lng } = parseCoordinates(location.coords);
-        let iconUrl;
-        switch (location.color) {
-            case 'green':
-                iconUrl = 'marker_green.png';
-                break;
-            case 'blue':
-                iconUrl = 'marker_blue.png';
-                break;
-            case 'red':
-                iconUrl = 'marker_red.png';
-                break;
-            default:
-                iconUrl = 'marker_blue.png';
-        }
+        const [lat, lng] = location.coords.split(',').map(Number);
+        const iconUrl = `marker_${location.color}.png`;
         addCustomMarker(lat, lng, location.name, location.whatsapp, iconUrl);
     });
 }
 
-// Ajustar a visão do mapa
+// Ajusta a visão do mapa
 function adjustMapView() {
     if (markersGroup.getBounds().isValid()) {
         map.fitBounds(markersGroup.getBounds());
     }
 }
 
-// Atualizar posição do marcador do usuário
+// Atualiza a localização do usuário
 function updateUserLocation(lat, lng) {
-    if (userMarker) {
-        userMarker.setLatLng([lat, lng]);
+    if (!userMarker) {
+        userMarker = L.marker([lat, lng], { icon: L.divIcon({ className: 'current-location-marker' }) });
+        userMarker.addTo(map).bindPopup('Você está aqui.').openPopup();
     } else {
-        const customIcon = L.divIcon({
-            className: 'current-location-marker',
-            iconSize: [20, 20]
-        });
-
-        userMarker = L.marker([lat, lng], { icon: customIcon })
-            .addTo(markersGroup)
-            .bindPopup("Você está aqui.")
-            .openPopup();
+        userMarker.setLatLng([lat, lng]);
     }
 }
 
-// Inicializar e configurar o mapa
-function startMap() {
-    const online = isOnline();
-    initializeMap(!online);
+// Inicializa a aplicação
+function initApp() {
+    initializeMap();
+    loadMarkers();
+    adjustMapView();
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude, longitude } = position.coords;
-
+            (pos) => {
+                const { latitude, longitude } = pos.coords;
                 updateUserLocation(latitude, longitude);
-                loadMarkers();
-                adjustMapView();
-
-                navigator.geolocation.watchPosition(
-                    (position) => {
-                        const { latitude, longitude } = position.coords;
-                        updateUserLocation(latitude, longitude);
-                    },
-                    (error) => {
-                        console.error("Erro ao obter localização em tempo real:", error);
-                    },
-                    { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
-                );
             },
-            (error) => {
-                console.error("Erro ao obter localização atual:", error);
-                loadMarkers();
-                adjustMapView();
-            }
+            (err) => console.error('Erro ao obter localização:', err),
+            { enableHighAccuracy: true }
         );
-    } else {
-        alert("Geolocalização não é suportada pelo navegador.");
-        loadMarkers();
-        adjustMapView();
     }
 }
 
-// Ouvir eventos de alteração de conectividade
-window.addEventListener('online', () => {
-    alert("Conexão restaurada! Atualizando mapa...");
-    startMap();
-});
+// Registra o Service Worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js')
+        .then(() => console.log('Service Worker registrado com sucesso.'))
+        .catch((err) => console.error('Erro ao registrar o Service Worker:', err));
+}
 
-window.addEventListener('offline', () => {
-    alert("Você está offline! Usando o mapa em cache.");
-    startMap();
-});
-
-// Iniciar o mapa ao carregar a página
-startMap();
+initApp();
