@@ -2,11 +2,39 @@ let map;
 let markersGroup;
 let userMarker;
 
+// Salvar estado no localStorage
+function saveState() {
+    const mapState = {
+        center: map.getCenter(),
+        zoom: map.getZoom(),
+        markers: markersGroup.getLayers().map(marker => ({
+            lat: marker.getLatLng().lat,
+            lng: marker.getLatLng().lng,
+            popup: marker.getPopup().getContent()
+        }))
+    };
+    localStorage.setItem('mapState', JSON.stringify(mapState));
+}
+
+// Restaurar estado do localStorage
+function restoreState() {
+    const savedState = localStorage.getItem('mapState');
+    if (savedState) {
+        const { center, zoom, markers } = JSON.parse(savedState);
+        map.setView(center, zoom);
+
+        markers.forEach(({ lat, lng, popup }) => {
+            const marker = L.marker([lat, lng]).bindPopup(popup);
+            markersGroup.addLayer(marker);
+        });
+    }
+}
+
 // Função para inicializar o mapa
 function initializeMap() {
     map = L.map('map');
 
-    // Camada de tiles (pode ser configurada para usar offline se necessário)
+    // Camada de tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
@@ -15,36 +43,11 @@ function initializeMap() {
     // Inicializar o grupo de marcadores
     markersGroup = L.featureGroup().addTo(map);
 
-    // Carregar o estado do mapa e marcadores do localStorage
-    loadMapState();
-}
+    // Restaurar estado salvo, se disponível
+    restoreState();
 
-// Função para carregar o estado do mapa
-function loadMapState() {
-    const mapState = JSON.parse(localStorage.getItem('mapState'));
-    if (mapState) {
-        // Restaura a posição do usuário
-        if (mapState.userLocation) {
-            updateUserLocation(mapState.userLocation.lat, mapState.userLocation.lng);
-        }
-        // Carregar marcadores do localStorage
-        if (mapState.markers) {
-            mapState.markers.forEach(marker => {
-                addCustomMarker(marker.lat, marker.lng, marker.name, marker.whatsapp, marker.iconUrl);
-            });
-        }
-        // Ajustar a visão
-        adjustMapView();
-    }
-}
-
-// Função para salvar o estado do mapa
-function saveMapState(userLocation, markers) {
-    const mapState = {
-        userLocation: userLocation,
-        markers: markers
-    };
-    localStorage.setItem('mapState', JSON.stringify(mapState));
+    // Salvar estado sempre que o mapa for movido ou o zoom alterado
+    map.on('moveend', saveState);
 }
 
 // Função para adicionar marcador ao grupo
@@ -74,7 +77,13 @@ function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
 
     const marker = L.marker([lat, lng], { icon: icon }).bindPopup(popupContent);
     markersGroup.addLayer(marker); // Adiciona o marcador ao grupo
+
+    // Salvar estado ao adicionar um marcador
+    saveState();
 }
+
+// Resto do código permanece igual, com chamadas a `saveState()` sempre que necessário
+
 
 // Função para processar as coordenadas
 function parseCoordinates(coordString) {
