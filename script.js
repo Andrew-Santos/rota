@@ -167,3 +167,28 @@ if (navigator.geolocation) {
     loadMarkers();
     adjustMapView();
 }
+
+// Função para armazenar localização no localStorage
+function storeLocation(lat, lng) {
+    localStorage.setItem('userLocation', JSON.stringify({ lat, lng }));
+}
+
+// Função para obter localização do localStorage
+function getStoredLocation() {
+    const location = localStorage.getItem('userLocation');
+    return location ? JSON.parse(location) : null;
+}
+
+// Quando a localização atual for detectada
+navigator.geolocation.getCurrentPosition((position) => {
+    const { latitude, longitude } = position.coords;
+    storeLocation(latitude, longitude);
+    updateUserLocation(latitude, longitude);
+});
+
+// Se estiver offline, tente carregar a última localização salva
+const storedLocation = getStoredLocation();
+if (storedLocation) {
+    updateUserLocation(storedLocation.lat, storedLocation.lng);
+}
+
