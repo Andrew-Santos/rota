@@ -54,15 +54,14 @@ function parseCoordinates(coordString) {
 // Carregar marcadores do array
 function loadMarkers() {
     const locations = [
-        https://wa.me/5574999285354?text=Ol%C3%A1%2C%20*Aldione Pereira Lopes*%20CPF%3A%20XXX.XXX.XXX-44.%20Sou%20o%20instalador%20da%20sua%20antena%20digital%2C%20preciso%20que%20me%20envie%20sua%20*LOCALIZA%C3%87%C3%83O*%20clicando%20no%20link%20abaixo%3A%0A%0Ahttps%3A%2F%2Fandrew-santos.github.io%2Flocal%2F%0A%0AProtocolo%3A 2026166238
-        https://wa.me/5574999998924?text=Ol%C3%A1%2C%20*Daniel De Jesus Silva*%20CPF%3A%20XXX.XXX.XXX-39.%20Sou%20o%20instalador%20da%20sua%20antena%20digital%2C%20preciso%20que%20me%20envie%20sua%20*LOCALIZA%C3%87%C3%83O*%20clicando%20no%20link%20abaixo%3A%0A%0Ahttps%3A%2F%2Fandrew-santos.github.io%2Flocal%2F%0A%0AProtocolo%3A 2026144048
-        https://wa.me/5574999873340?text=Ol%C3%A1%2C%20*Elioneide Dos Santos De Jesus*%20CPF%3A%20XXX.XXX.XXX-06.%20Sou%20o%20instalador%20da%20sua%20antena%20digital%2C%20preciso%20que%20me%20envie%20sua%20*LOCALIZA%C3%87%C3%83O*%20clicando%20no%20link%20abaixo%3A%0A%0Ahttps%3A%2F%2Fandrew-santos.github.io%2Flocal%2F%0A%0AProtocolo%3A 2026197047
-        https://wa.me/5574999249307?text=Ol%C3%A1%2C%20*Jailma Anacleto Da Silva*%20CPF%3A%20XXX.XXX.XXX-89.%20Sou%20o%20instalador%20da%20sua%20antena%20digital%2C%20preciso%20que%20me%20envie%20sua%20*LOCALIZA%C3%87%C3%83O*%20clicando%20no%20link%20abaixo%3A%0A%0Ahttps%3A%2F%2Fandrew-santos.github.io%2Flocal%2F%0A%0AProtocolo%3A 2026218801
-        https://wa.me/5574991543777?text=Ol%C3%A1%2C%20*Jose De Jesus Claudio Pio*%20CPF%3A%20XXX.XXX.XXX-97.%20Sou%20o%20instalador%20da%20sua%20antena%20digital%2C%20preciso%20que%20me%20envie%20sua%20*LOCALIZA%C3%87%C3%83O*%20clicando%20no%20link%20abaixo%3A%0A%0Ahttps%3A%2F%2Fandrew-santos.github.io%2Flocal%2F%0A%0AProtocolo%3A 2026215116
-        https://wa.me/5574999585781?text=Ol%C3%A1%2C%20*Ozania Silva Costa Da Silva*%20CPF%3A%20XXX.XXX.XXX-81.%20Sou%20o%20instalador%20da%20sua%20antena%20digital%2C%20preciso%20que%20me%20envie%20sua%20*LOCALIZA%C3%87%C3%83O*%20clicando%20no%20link%20abaixo%3A%0A%0Ahttps%3A%2F%2Fandrew-santos.github.io%2Flocal%2F%0A%0AProtocolo%3A 2026207681
-        https://wa.me/5574999886940?text=Ol%C3%A1%2C%20*Suele Soares Dos Santos*%20CPF%3A%20XXX.XXX.XXX-69.%20Sou%20o%20instalador%20da%20sua%20antena%20digital%2C%20preciso%20que%20me%20envie%20sua%20*LOCALIZA%C3%87%C3%83O*%20clicando%20no%20link%20abaixo%3A%0A%0Ahttps%3A%2F%2Fandrew-santos.github.io%2Flocal%2F%0A%0AProtocolo%3A 2026158319
-        https://wa.me/5574998061636?text=Ol%C3%A1%2C%20*Tamires Do Nascimento Cruz*%20CPF%3A%20XXX.XXX.XXX-70.%20Sou%20o%20instalador%20da%20sua%20antena%20digital%2C%20preciso%20que%20me%20envie%20sua%20*LOCALIZA%C3%87%C3%83O*%20clicando%20no%20link%20abaixo%3A%0A%0Ahttps%3A%2F%2Fandrew-santos.github.io%2Flocal%2F%0A%0AProtocolo%3A 2026157332
-
+         {coords: "-10.7426642,-40.1266351", name: "Aldione Pereira Lopes", whatsapp: "5574999285354", color: 'green'},
+         {coords: "-10.7144355,-40.0757781", name: "Daniel De Jesus Silva", whatsapp: "5574999998924", color: 'green'},
+         {coords: "-10.757302, -40.079825", name: "Elioneide Dos Santos De Jesus", whatsapp: "5574999873340", color: 'green'},
+         {coords: "-10.7437109,-40.128308", name: "Jailma Anacleto Da Silva", whatsapp: "5574999249307", color: 'green'},
+         {coords: "-10.6505043,-40.2729803", name: "Jose De Jesus Claudio Pio", whatsapp: "5574991543777", color: 'green'},
+         {coords: "-10.7110053,-40.1262819", name: "Ozania Silva Costa Da Silva", whatsapp: "5574999585781", color: 'green'},
+         {coords: "-10.6240442,-40.0171033", name: "Suele Soares Dos Santos", whatsapp: "5574999886940", color: 'green'},
+         {coords: "-10.718211,-40.088367", name: "Tamires Do Nascimento Cruz", whatsapp: "5574998061636", color: 'green'},
     ];
 
     locations.forEach(location => {
