@@ -2,21 +2,34 @@ let map;
 let markersGroup;
 let userMarker;
 
-// Função para inicializar o mapa
-function initializeMap() {
+// Verificar conectividade com a internet
+function isOnline() {
+    return navigator.onLine;
+}
+
+// Inicializar o mapa
+function initializeMap(isCached = false) {
     map = L.map('map');
 
-    // Camada de tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
-    }).addTo(map);
+    if (isCached) {
+        // Camada de tiles em cache (deve ser configurada previamente)
+        L.tileLayer('./tiles/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Map data © OpenStreetMap contributors (Cache)'
+        }).addTo(map);
+    } else {
+        // Camada de tiles online
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    }
 
     // Inicializar o grupo de marcadores
     markersGroup = L.featureGroup().addTo(map);
 }
 
-// Função para adicionar marcador ao grupo
+// Adicionar marcador personalizado
 function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
     const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
     const whatsappLink = `https://wa.me/${whatsappNumber}`;
@@ -42,10 +55,10 @@ function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
     });
 
     const marker = L.marker([lat, lng], { icon: icon }).bindPopup(popupContent);
-    markersGroup.addLayer(marker); // Adiciona o marcador ao grupo
+    markersGroup.addLayer(marker);
 }
 
-// Função para processar as coordenadas
+// Processar coordenadas
 function parseCoordinates(coordString) {
     const [lat, lng] = coordString.split(',').map(Number);
     return { lat, lng };
@@ -88,20 +101,18 @@ function loadMarkers() {
     });
 }
 
-// Inicializar e ajustar o mapa
+// Ajustar a visão do mapa
 function adjustMapView() {
     if (markersGroup.getBounds().isValid()) {
         map.fitBounds(markersGroup.getBounds());
     }
 }
 
-// Função para atualizar a posição do marcador do usuário em tempo real
+// Atualizar posição do marcador do usuário
 function updateUserLocation(lat, lng) {
     if (userMarker) {
-        // Se o marcador já existe, apenas atualiza a posição
         userMarker.setLatLng([lat, lng]);
     } else {
-        // Caso contrário, cria um novo marcador para a localização
         const customIcon = L.divIcon({
             className: 'current-location-marker',
             iconSize: [20, 20]
@@ -112,58 +123,56 @@ function updateUserLocation(lat, lng) {
             .bindPopup("Você está aqui.")
             .openPopup();
     }
-    // Ajusta a visão do mapa para o marcador
-    // map.setView([lat, lng], 15); 
 }
 
-// Tentar obter localização atual e ativar a atualização em tempo real
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const { latitude, longitude } = position.coords;
+// Inicializar e configurar o mapa
+function startMap() {
+    const online = isOnline();
+    initializeMap(!online);
 
-            initializeMap();
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
 
-            // Adicionar marcador de localização atual
-            updateUserLocation(latitude, longitude);
+                updateUserLocation(latitude, longitude);
+                loadMarkers();
+                adjustMapView();
 
-            // Carregar marcadores do array
-            loadMarkers();
-
-            // Ajustar visão geral
-            adjustMapView();
-
-            // Iniciar atualização em tempo real
-            navigator.geolocation.watchPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    updateUserLocation(latitude, longitude);
-                },
-                (error) => {
-                    console.error("Erro ao obter localização em tempo real:", error);
-                },
-                {
-                    enableHighAccuracy: true,
-                    maximumAge: 10000,
-                    timeout: 5000
-                }
-            );
-        },
-        (error) => {
-            console.error("Erro ao obter localização atual:", error);
-
-            initializeMap();
-
-            // Carregar marcadores do array
-            loadMarkers();
-
-            // Ajustar visão geral
-            adjustMapView();
-        }
-    );
-} else {
-    alert("Geolocalização não é suportada pelo navegador.");
-    initializeMap();
-    loadMarkers();
-    adjustMapView();
+                navigator.geolocation.watchPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        updateUserLocation(latitude, longitude);
+                    },
+                    (error) => {
+                        console.error("Erro ao obter localização em tempo real:", error);
+                    },
+                    { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
+                );
+            },
+            (error) => {
+                console.error("Erro ao obter localização atual:", error);
+                loadMarkers();
+                adjustMapView();
+            }
+        );
+    } else {
+        alert("Geolocalização não é suportada pelo navegador.");
+        loadMarkers();
+        adjustMapView();
+    }
 }
+
+// Ouvir eventos de alteração de conectividade
+window.addEventListener('online', () => {
+    alert("Conexão restaurada! Atualizando mapa...");
+    startMap();
+});
+
+window.addEventListener('offline', () => {
+    alert("Você está offline! Usando o mapa em cache.");
+    startMap();
+});
+
+// Iniciar o mapa ao carregar a página
+startMap();
