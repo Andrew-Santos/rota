@@ -1,31 +1,32 @@
 let map;
 let markersGroup;
-let userMarker;
 
-// Salvar estado no localStorage
-function saveState() {
+// Função para salvar o estado do mapa no localStorage
+function saveMapState() {
     const mapState = {
         center: map.getCenter(),
         zoom: map.getZoom(),
         markers: markersGroup.getLayers().map(marker => ({
             lat: marker.getLatLng().lat,
             lng: marker.getLatLng().lng,
-            popup: marker.getPopup().getContent()
+            name: marker.options.name,
+            whatsapp: marker.options.whatsapp,
+            color: marker.options.color
         }))
     };
     localStorage.setItem('mapState', JSON.stringify(mapState));
 }
 
-// Restaurar estado do localStorage
-function restoreState() {
+// Função para restaurar o estado do mapa do localStorage
+function restoreMapState() {
     const savedState = localStorage.getItem('mapState');
     if (savedState) {
         const { center, zoom, markers } = JSON.parse(savedState);
-        map.setView(center, zoom);
 
-        markers.forEach(({ lat, lng, popup }) => {
-            const marker = L.marker([lat, lng]).bindPopup(popup);
-            markersGroup.addLayer(marker);
+        map.setView([center.lat, center.lng], zoom);
+
+        markers.forEach(({ lat, lng, name, whatsapp, color }) => {
+            addCustomMarker(lat, lng, name, whatsapp, color);
         });
     }
 }
@@ -34,7 +35,7 @@ function restoreState() {
 function initializeMap() {
     map = L.map('map');
 
-    // Camada de tiles
+    // Camada de tiles (carregamento do mapa base)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
@@ -43,55 +44,62 @@ function initializeMap() {
     // Inicializar o grupo de marcadores
     markersGroup = L.featureGroup().addTo(map);
 
-    // Restaurar estado salvo, se disponível
-    restoreState();
+    // Restaurar estado salvo
+    restoreMapState();
 
-    // Salvar estado sempre que o mapa for movido ou o zoom alterado
-    map.on('moveend', saveState);
+    // Salvar estado ao mover ou alterar zoom
+    map.on('moveend', saveMapState);
+    map.on('zoomend', saveMapState);
 }
 
 // Função para adicionar marcador ao grupo
-function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
+function addCustomMarker(lat, lng, name, whatsapp, color) {
     const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-    const whatsappLink = `https://wa.me/${whatsappNumber}`;
+    const whatsappLink = `https://wa.me/${whatsapp}`;
 
     const popupContent = `
         <div>
-            <p><strong>${popupText}</strong></p>
+            <p><strong>${name}</strong></p>
             <p>${lat.toFixed(6)}, ${lng.toFixed(6)}</p>
             <div class="navigation-links">
                 <a href="${googleMapsLink}" target="_blank">Abrir no Google Maps</a>
             </div>
-            <a href="${whatsappLink}" target="_blank" class="whatsapp-link" title="Enviar pelo WhatsApp">${whatsappNumber} 
+            <a href="${whatsappLink}" target="_blank" class="whatsapp-link" title="Enviar pelo WhatsApp">${whatsapp} 
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WhatsApp" width="20" height="20">
             </a>
         </div>
     `;
 
+    const iconUrl = getIconUrl(color);
     const icon = L.icon({
-        iconUrl: iconUrl,
+        iconUrl,
         iconSize: [25, 41],
         iconAnchor: [12, 41],
         popupAnchor: [0, -41]
     });
 
-    const marker = L.marker([lat, lng], { icon: icon }).bindPopup(popupContent);
+    const marker = L.marker([lat, lng], {
+        icon: icon,
+        name,
+        whatsapp,
+        color
+    }).bindPopup(popupContent);
+
     markersGroup.addLayer(marker); // Adiciona o marcador ao grupo
-
-    // Salvar estado ao adicionar um marcador
-    saveState();
+    saveMapState();
 }
 
-// Resto do código permanece igual, com chamadas a `saveState()` sempre que necessário
-
-
-// Função para processar as coordenadas
-function parseCoordinates(coordString) {
-    const [lat, lng] = coordString.split(',').map(Number);
-    return { lat, lng };
+// Função para retornar o URL do ícone baseado na cor
+function getIconUrl(color) {
+    switch (color) {
+        case 'green': return 'marker_green.png';
+        case 'blue': return 'marker_blue.png';
+        case 'red': return 'marker_red.png';
+        default: return 'marker_blue.png';
+    }
 }
 
-// Carregar marcadores do array
+// Carregar marcadores do array inicial
 function loadMarkers() {
     const locations = [
          {coords: "-10.7455323,-40.133743", name: "Adeilda Ferreira Silva", whatsapp: "5574999692974", color: 'green'},
@@ -109,107 +117,22 @@ function loadMarkers() {
 
     ];
 
-    const savedMarkers = [];
-    locations.forEach(location => {
-        const { lat, lng } = parseCoordinates(location.coords);
-        let iconUrl;
-        switch (location.color) {
-            case 'green':
-                iconUrl = 'marker_green.png';
-                break;
-            case 'blue':
-                iconUrl = 'marker_blue.png';
-                break;
-            case 'red':
-                iconUrl = 'marker_red.png';
-                break;
-            default:
-                iconUrl = 'marker_blue.png';
-        }
-        savedMarkers.push({ lat, lng, name: location.name, whatsapp: location.whatsapp, iconUrl });
-        addCustomMarker(lat, lng, location.name, location.whatsapp, iconUrl);
+    locations.forEach(({ coords, name, whatsapp, color }) => {
+        const { lat, lng } = parseCoordinates(coords);
+        addCustomMarker(lat, lng, name, whatsapp, color);
     });
-
-    // Salvar estado dos marcadores no localStorage
-    saveMapState(null, savedMarkers);
 }
 
-// Inicializar e ajustar o mapa
-function adjustMapView() {
-    if (markersGroup.getBounds().isValid()) {
-        map.fitBounds(markersGroup.getBounds());
-    }
+// Função para processar as coordenadas
+function parseCoordinates(coordString) {
+    const [lat, lng] = coordString.split(',').map(Number);
+    return { lat, lng };
 }
 
-// Função para atualizar a posição do marcador do usuário em tempo real
-function updateUserLocation(lat, lng) {
-    if (userMarker) {
-        // Se o marcador já existe, apenas atualiza a posição
-        userMarker.setLatLng([lat, lng]);
-    } else {
-        // Caso contrário, cria um novo marcador para a localização
-        const customIcon = L.divIcon({
-            className: 'current-location-marker',
-            iconSize: [20, 20]
-        });
-
-        userMarker = L.marker([lat, lng], { icon: customIcon })
-            .addTo(markersGroup)
-            .bindPopup("Você está aqui.")
-            .openPopup();
-    }
-    // Salvar estado do mapa incluindo a localização do usuário
-    saveMapState({ lat, lng }, []);
-}
-
-// Tentar obter localização atual e ativar a atualização em tempo real
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const { latitude, longitude } = position.coords;
-
-            initializeMap();
-
-            // Adicionar marcador de localização atual
-            updateUserLocation(latitude, longitude);
-
-            // Carregar marcadores do array
-            loadMarkers();
-
-            // Ajustar visão geral
-            adjustMapView();
-
-            // Iniciar atualização em tempo real
-            navigator.geolocation.watchPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    updateUserLocation(latitude, longitude);
-                },
-                (error) => {
-                    console.error("Erro ao obter localização em tempo real:", error);
-                },
-                {
-                    enableHighAccuracy: true,
-                    maximumAge: 10000,
-                    timeout: 5000
-                }
-            );
-        },
-        (error) => {
-            console.error("Erro ao obter localização atual:", error);
-
-            initializeMap();
-
-            // Carregar marcadores do array
-            loadMarkers();
-
-            // Ajustar visão geral
-            adjustMapView();
-        }
-    );
-} else {
-    alert("Geolocalização não é suportada pelo navegador.");
+// Inicializar o mapa
+document.addEventListener('DOMContentLoaded', () => {
     initializeMap();
-    loadMarkers();
-    adjustMapView();
-}
+    if (!localStorage.getItem('mapState')) {
+        loadMarkers(); // Carregar marcadores iniciais se não houver estado salvo
+    }
+});
