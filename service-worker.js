@@ -1,35 +1,32 @@
-const CACHE_NAME = 'map-cache-v1';
+const CACHE_NAME = 'map-app-cache-v1';
 const FILES_TO_CACHE = [
-    './', // Raiz do site
-    './index.html', // Página principal
-    './script.js', // Seu script principal
-    './styles.css', // CSS (se houver)
-    './tiles/{z}/{x}/{y}.png', // Tiles locais do mapa
-    './marker_green.png', // Ícones de marcadores
+    './',
+    './index.html',
+    './script.js',
+    './styles.css',
+    './tiles/{z}/{x}/{y}.png',
+    './marker_green.png',
     './marker_blue.png',
-    './marker_red.png',
-    'https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png' // Ícone do WhatsApp
+    './marker_red.png'
 ];
 
-// Evento de instalação (cache dos arquivos)
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            console.log('Pré-carregando arquivos no cache...');
+            console.log('Caching files...');
             return cache.addAll(FILES_TO_CACHE);
         })
     );
 });
 
-// Evento de ativação (limpeza de caches antigos)
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
+        caches.keys().then((keyList) => {
             return Promise.all(
-                cacheNames.map((cache) => {
-                    if (cache !== CACHE_NAME) {
-                        console.log('Removendo cache antigo:', cache);
-                        return caches.delete(cache);
+                keyList.map((key) => {
+                    if (key !== CACHE_NAME) {
+                        console.log('Removing old cache:', key);
+                        return caches.delete(key);
                     }
                 })
             );
@@ -37,7 +34,6 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Evento de busca (resposta offline)
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request).then((response) => {
