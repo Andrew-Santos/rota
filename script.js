@@ -18,6 +18,34 @@ let map;
 let markersGroup;
 let userMarker;
 
+function updateUserLocation(lat, lng) {
+    if (userMarker) {
+        userMarker.setLatLng([lat, lng]); // Atualiza o marcador existente
+    } else {
+        const customIcon = L.divIcon({
+            className: 'current-location-marker',
+            iconSize: [20, 20]
+        });
+        userMarker = L.marker([lat, lng], { icon: customIcon })
+            .addTo(map)
+            .bindPopup("Você está aqui.")
+            .openPopup();
+    }
+    map.setView([lat, lng], 15); // Centraliza no marcador
+}
+
+// Observe a localização do usuário em tempo real
+navigator.geolocation.watchPosition(
+    (position) => {
+        const { latitude, longitude } = position.coords;
+        updateUserLocation(latitude, longitude);
+    },
+    (error) => {
+        console.error("Erro ao obter localização:", error);
+    },
+    { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
+);
+
 // Função para inicializar o mapa
 function initializeMap() {
     map = L.map('map');
