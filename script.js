@@ -2,26 +2,21 @@ let map;
 let markersGroup;
 let userMarker;
 
-// Inicializa o mapa e verifica conectividade
+// Função para inicializar o mapa
 function initializeMap() {
     map = L.map('map');
 
-    // Verifica conectividade e escolhe a fonte dos tiles
-    const tileLayer = navigator.onLine 
-        ? 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' 
-        : './tiles/{z}/{x}/{y}.png';
-
-    // Configura a camada de tiles
-    L.tileLayer(tileLayer, {
+    // Camada de tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Inicializa o grupo de marcadores
+    // Inicializar o grupo de marcadores
     markersGroup = L.featureGroup().addTo(map);
 }
 
-// Adiciona um marcador ao grupo
+// Função para adicionar marcador ao grupo
 function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
     const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
     const whatsappLink = `https://wa.me/${whatsappNumber}`;
@@ -47,48 +42,75 @@ function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
     });
 
     const marker = L.marker([lat, lng], { icon: icon }).bindPopup(popupContent);
-    markersGroup.addLayer(marker);
+    markersGroup.addLayer(marker); // Adiciona o marcador ao grupo
 }
 
-// Processa coordenadas de string para objeto
+// Função para processar as coordenadas
 function parseCoordinates(coordString) {
     const [lat, lng] = coordString.split(',').map(Number);
     return { lat, lng };
 }
 
-// Carrega marcadores de um array
+// Carregar marcadores do array
 function loadMarkers() {
     const locations = [
-        { coords: "-10.7455323,-40.133743", name: "Adeilda Ferreira Silva", whatsapp: "5574999692974", color: 'green' },
-        { coords: "-10.7426642,-40.1266351", name: "Aldione Pereira Lopes", whatsapp: "5574999285354", color: 'green' },
-        // Outros marcadores...
+        {coords: "-11.076811, -38.644735", name: "Maria Giceli Da Conceicao", whatsapp: "5575992187075", color: 'green'},
+        {coords: "-11.1027204,-38.7197327", name: "Jamile Miranda Do Nascimento", whatsapp: "5575991751825", color: 'green'},
+        {coords: "-11.0623999,-38.8958385", name: "Maria Helena Souza Santos", whatsapp: "5575991621250", color: 'green'},
+        {coords: "-10.9331603,-39.0353859", name: "Dara Santos Cosme", whatsapp: "5575992710137", color: 'green'},
+        {coords: "-11.0156083,-38.98899", name: "Luciana Jesus Da Silva", whatsapp: "5575992649795", color: 'green'},
+        {coords: "-10.9370599,-39.0467457", name: "Erica Matos Soares", whatsapp: "5575992102291", color: 'green'},
+        {coords: "-10.9747264,-38.9137615", name: "Ivana Jesus Silva", whatsapp: "5575991170426", color: 'green'},
+        {coords: "-10.9714314,-38.9117919", name: "Iraides Jesus Da Silva", whatsapp: "5575991280520", color: 'green'},
+        {coords: "-10.9335772,-39.0705657", name: "Celina Reis Dos Santos", whatsapp: "5575991667696", color: 'green'},
+        {coords: "-11.0123388,-38.7569144", name: "Veronica Andrade Lima", whatsapp: "5575991750022", color: 'green'},
+        {coords: "-10.8529043,-38.8895005", name: "Vanusa Jesus Pereira", whatsapp: "5575992883012", color: 'green'},
+        {coords: "-10.9970314,-38.7632259", name: "Adriana Gonsalves Da Cruz", whatsapp: "5575991089145", color: 'green'},
+        {coords: "-11.0633167,-38.7723733", name: "Gilmara Farias De Souza", whatsapp: "5575992938894", color: 'green'},
+        {coords: "-11.0641497,-38.663744", name: "Maria Jose Santos De Jesus", whatsapp: "5575991700463", color: 'green'},
+        {coords: "-11.1172724,-38.8060512", name: "Marinalva Sousa Santana", whatsapp: "5575992078857", color: 'green'},
+        {coords: "-10.7409828,-38.8341876", name: "Josinete Andrade Silva", whatsapp: "5575991041586", color: 'green'},
+        {coords: "-11.060816, -38.837635", name: "Eledecia Dos Santos Pimentel", whatsapp: "5575992177035", color: 'green'},
+        {coords: "-11.05971518298199,-38.91728298433505", name: "Juarez Carmo Matos", whatsapp: "5575992091146", color: 'green'},
+        {coords: "-10.996143, -38.763398", name: "Marizete Jesus Nunes", whatsapp: "5575991617798", color: 'green'},
+        {coords: "-11.099682, -38.905655", name: "Jose Carlos Jesus Dos Santos", whatsapp: "5575991596449", color: 'green'},
+        {coords: "-11.140223, -38.908538", name: "Valquiria De Jesus Lima", whatsapp: "5575991007497", color: 'green'},
     ];
 
     locations.forEach(location => {
         const { lat, lng } = parseCoordinates(location.coords);
         let iconUrl;
         switch (location.color) {
-            case 'green': iconUrl = 'marker_green.png'; break;
-            case 'blue': iconUrl = 'marker_blue.png'; break;
-            case 'red': iconUrl = 'marker_red.png'; break;
-            default: iconUrl = 'marker_blue.png';
+            case 'green':
+                iconUrl = 'marker_green.png';
+                break;
+            case 'blue':
+                iconUrl = 'marker_blue.png';
+                break;
+            case 'red':
+                iconUrl = 'marker_red.png';
+                break;
+            default:
+                iconUrl = 'marker_blue.png';
         }
         addCustomMarker(lat, lng, location.name, location.whatsapp, iconUrl);
     });
 }
 
-// Ajusta a visão do mapa
+// Inicializar e ajustar o mapa
 function adjustMapView() {
     if (markersGroup.getBounds().isValid()) {
         map.fitBounds(markersGroup.getBounds());
     }
 }
 
-// Atualiza a posição do marcador do usuário
+// Função para atualizar a posição do marcador do usuário em tempo real
 function updateUserLocation(lat, lng) {
     if (userMarker) {
+        // Se o marcador já existe, apenas atualiza a posição
         userMarker.setLatLng([lat, lng]);
     } else {
+        // Caso contrário, cria um novo marcador para a localização
         const customIcon = L.divIcon({
             className: 'current-location-marker',
             iconSize: [20, 20]
@@ -99,32 +121,52 @@ function updateUserLocation(lat, lng) {
             .bindPopup("Você está aqui.")
             .openPopup();
     }
+    // Ajusta a visão do mapa para o marcador
+    // map.setView([lat, lng], 15); 
 }
 
-// Inicializa o mapa com localização do usuário
+// Tentar obter localização atual e ativar a atualização em tempo real
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
         (position) => {
             const { latitude, longitude } = position.coords;
 
             initializeMap();
+
+            // Adicionar marcador de localização atual
             updateUserLocation(latitude, longitude);
+
+            // Carregar marcadores do array
             loadMarkers();
+
+            // Ajustar visão geral
             adjustMapView();
 
+            // Iniciar atualização em tempo real
             navigator.geolocation.watchPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
                     updateUserLocation(latitude, longitude);
                 },
-                (error) => console.error("Erro ao obter localização em tempo real:", error),
-                { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
+                (error) => {
+                    console.error("Erro ao obter localização em tempo real:", error);
+                },
+                {
+                    enableHighAccuracy: true,
+                    maximumAge: 10000,
+                    timeout: 5000
+                }
             );
         },
         (error) => {
             console.error("Erro ao obter localização atual:", error);
+
             initializeMap();
+
+            // Carregar marcadores do array
             loadMarkers();
+
+            // Ajustar visão geral
             adjustMapView();
         }
     );

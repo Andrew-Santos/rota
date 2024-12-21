@@ -1,6 +1,5 @@
 body {
     margin: 0;
-    padding: 0;
     font-family: Arial, sans-serif;
 }
 
@@ -9,21 +8,11 @@ body {
     width: 100%;
 }
 
-.navigation-links a {
-    display: block;
-    color: blue;
-    text-decoration: none;
-    margin-top: 5px;
-}
-
-.whatsapp-link img {
-    vertical-align: middle;
-    margin-left: 5px;
-}
-
+/* Estilo para o marcador da localização do usuário */
 .current-location-marker {
-    background-color: red;
-    border-radius: 50%;
+    background-color: red; /* Cor de fundo para destacar */
+    border-radius: 50%; /* Tornar o marcador redondo */
     width: 20px;
     height: 20px;
+    border: 2px solid white; /* Bordas brancas */
 }
