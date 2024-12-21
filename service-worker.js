@@ -1,42 +1,51 @@
 const CACHE_NAME = 'map-cache-v1';
-const URLS_TO_CACHE = [
-    '/', // Página inicial
-    '/index.html',
-    '/styles.css', // Substitua pelo nome do arquivo CSS do seu projeto
-    '/script.js',  // Substitua pelo nome do arquivo JavaScript principal
-    '/marker_blue.png', // Ícones utilizados
+const urlsToCache = [
+    '/', // Página principal
     '/marker_green.png',
+    '/marker_blue.png',
     '/marker_red.png',
-    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js',
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' // Cache dos tiles do mapa
 ];
 
-// Instalando o Service Worker
+// Instalar o Service Worker e armazenar arquivos no cache
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
-            return cache.addAll(URLS_TO_CACHE);
+            console.log('Cache aberto');
+            return cache.addAll(urlsToCache);
         })
     );
 });
 
-// Respondendo com cache ou rede
+// Responder com os dados do cache ou buscar da rede
 self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request).then(response => {
-            return response || fetch(event.request);
+            // Retorna o cache ou faz uma nova requisição
+            return response || fetch(event.request).then(fetchResponse => {
+                return caches.open(CACHE_NAME).then(cache => {
+                    cache.put(event.request, fetchResponse.clone());
+                    return fetchResponse;
+                });
+            });
+        }).catch(() => {
+            // Fallback para quando a rede falha e o cache não possui o recurso
+            if (event.request.destination === 'image') {
+                return caches.match('/fallback-image.png'); // Imagem de fallback opcional
+            }
         })
     );
 });
 
-// Atualizando o cache quando necessário
+// Remover caches antigos durante a ativação
 self.addEventListener('activate', event => {
+    const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
-                cacheNames.map(cache => {
-                    if (cache !== CACHE_NAME) {
-                        return caches.delete(cache);
+                cacheNames.map(cacheName => {
+                    if (!cacheWhitelist.includes(cacheName)) {
+                        return caches.delete(cacheName);
                     }
                 })
             );
