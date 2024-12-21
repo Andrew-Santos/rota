@@ -100,6 +100,7 @@ function loadMarkers() {
     const locations = [
          {coords: "-10.7455323,-40.133743", name: "Adeilda Ferreira Silva", whatsapp: "5574999692974", color: 'green'},
          {coords: "-10.7426642,-40.1266351", name: "Aldione Pereira Lopes", whatsapp: "5574999285354", color: 'green'},
+         {coords: "-10.699525, -40.202888", name: "Aldo Alipio De Andrade", whatsapp: "5574999212640", color: 'green'},
          {coords: "-10.797732, -40.045934", name: "Alzina Alves Dos Santos", whatsapp: "5574999491790", color: 'green'},
          {coords: "-10.7110838,-40.1645099", name: "Amos Dos Santos Silva", whatsapp: "5574999449893", color: 'green'},
          {coords: "-10.654979, -40.221685", name: "Catiane Oliveira Dos Santos", whatsapp: "5574999391769", color: 'green'},
@@ -111,15 +112,18 @@ function loadMarkers() {
          {coords: "-10.7437109,-40.128308", name: "Jailma Anacleto Da Silva", whatsapp: "5574999249307", color: 'green'},
          {coords: "-10.762375,-40.148235", name: "Jean Santos Da Silva", whatsapp: "5574999411784", color: 'green'},
          {coords: "-10.6505043,-40.2729803", name: "Jose De Jesus Claudio Pio", whatsapp: "5574991543777", color: 'green'},
+         {coords: "-10.699525, -40.202888", name: "Lucicleide Felix De Andrade", whatsapp: "5574999212640", color: 'green'},
          {coords: "-10.736903, -40.123718", name: "Maria De Jesus Barboza", whatsapp: "5562998651713", color: 'green'},
+         {coords: "-10.7483204,-40.1332201", name: "Micilene Viana Da Silva Barreto", whatsapp: "5574999105913", color: 'green'},
          {coords: "-10.697112,-40.086805", name: "Miguel Dias Dos Santos", whatsapp: "5574999070528", color: 'green'},
          {coords: "-10.7110053,-40.1262819", name: "Ozania Silva Costa Da Silva", whatsapp: "5574999585781", color: 'green'},
+         {coords: "-10.711641,-40.1261426", name: "Rogesemi Mendes Da Silva", whatsapp: "5574998174242", color: 'green'},
          {coords: "-10.6505806,-40.2714501", name: "Samire Januario Dos Santos", whatsapp: "5574998029072", color: 'green'},
          {coords: "-10.6240442,-40.0171033", name: "Suele Soares Dos Santos", whatsapp: "5574999886940", color: 'green'},
          {coords: "-10.718211,-40.088367", name: "Tamires Do Nascimento Cruz", whatsapp: "5574998061636", color: 'green'},
          {coords: "-10.7506849,-40.12249", name: "Vera Bina Da Silva", whatsapp: "557481295534", color: 'green'},
          {coords: "-10.7160923,-40.0433762", name: "Willian Da Silva Vitor", whatsapp: "5527996144049", color: 'green'},
-
+        
 
     ];
 
