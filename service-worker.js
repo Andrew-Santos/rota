@@ -1,36 +1,35 @@
-const CACHE_NAME = 'offline-cache-v1'; // Nome do cache
-const ASSETS = [
-    './', // Cache o HTML
-    './index.html',
-    './style.css',
-    './script.js',
+const CACHE_NAME = 'map-cache-v1';
+const FILES_TO_CACHE = [
+    './', // Raiz do site
+    './index.html', // Página principal
+    './script.js', // Seu script principal
+    './styles.css', // CSS (se houver)
+    './tiles/{z}/{x}/{y}.png', // Tiles locais do mapa
+    './marker_green.png', // Ícones de marcadores
     './marker_blue.png',
-    './marker_green.png',
     './marker_red.png',
-    'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css',
-    'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js',
-    '/offline.html', // Página offline
+    'https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png' // Ícone do WhatsApp
 ];
 
-// Instalar o Service Worker e cache dos recursos
+// Evento de instalação (cache dos arquivos)
 self.addEventListener('install', (event) => {
-    console.log('Service Worker instalado');
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS);
+            console.log('Pré-carregando arquivos no cache...');
+            return cache.addAll(FILES_TO_CACHE);
         })
     );
 });
 
-// Ativar o Service Worker e limpar caches antigos
+// Evento de ativação (limpeza de caches antigos)
 self.addEventListener('activate', (event) => {
-    console.log('Service Worker ativado');
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        return caches.delete(cacheName);
+                cacheNames.map((cache) => {
+                    if (cache !== CACHE_NAME) {
+                        console.log('Removendo cache antigo:', cache);
+                        return caches.delete(cache);
                     }
                 })
             );
@@ -38,29 +37,11 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Interceptar as requisições e fornecer respostas do cache ou da rede
+// Evento de busca (resposta offline)
 self.addEventListener('fetch', (event) => {
-    // Verificar se o navegador está online
-    if (navigator.onLine) {
-        // Se estiver online, tenta buscar os dados na rede
-        event.respondWith(
-            fetch(event.request).then((response) => {
-                // Armazene a resposta em cache para o futuro
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, response.clone());
-                });
-                return response;
-            }).catch(() => {
-                // Se a rede não estiver disponível, use o cache
-                return caches.match(event.request);
-            })
-        );
-    } else {
-        // Se estiver offline, use os dados do cache
-        event.respondWith(
-            caches.match(event.request).then((cachedResponse) => {
-                return cachedResponse || caches.match('/offline.html');
-            })
-        );
-    }
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
 });
