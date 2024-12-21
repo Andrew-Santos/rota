@@ -4,6 +4,15 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.error('Erro ao registrar o Service Worker:', err));
 }
 
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(() => {
+        console.log("Service Worker registrado com sucesso.");
+    }).catch(error => {
+        console.error("Falha ao registrar o Service Worker:", error);
+    });
+}
+
+
 
 let map;
 let markersGroup;
