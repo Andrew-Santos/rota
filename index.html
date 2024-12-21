@@ -1,33 +1,15 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rota EAF</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <title>Mapa Offline</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
 </head>
 <body>
-    <div id="map"></div>
-
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <div id="map" style="width: 100%; height: 100vh;"></div>
     <script src="script.js"></script>
-    
-    <!-- Registrar o Service Worker -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then((registration) => {
-                        console.log('Service Worker registrado com sucesso:', registration);
-                    })
-                    .catch((error) => {
-                        console.log('Falha ao registrar o Service Worker:', error);
-                    });
-            });
-        } else {
-            console.log('Service Worker não suportado neste navegador.');
-        }
-    </script>
 </body>
 </html>
