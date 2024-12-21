@@ -7,7 +7,7 @@ const urlsToCache = [
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' // Cache dos tiles do mapa
 ];
 
-// Instalar o Service Worker e armazenar arquivos no cache
+// xyzInstalar o Service Worker e armazenar arquivos no cache
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
