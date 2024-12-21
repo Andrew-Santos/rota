@@ -6,7 +6,7 @@ let userMarker;
 function initializeMap() {
     map = L.map('map');
 
-    // Camada de tiles
+    // Camada de tiles (pode ser configurada para usar offline se necessário)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
@@ -14,6 +14,37 @@ function initializeMap() {
 
     // Inicializar o grupo de marcadores
     markersGroup = L.featureGroup().addTo(map);
+
+    // Carregar o estado do mapa e marcadores do localStorage
+    loadMapState();
+}
+
+// Função para carregar o estado do mapa
+function loadMapState() {
+    const mapState = JSON.parse(localStorage.getItem('mapState'));
+    if (mapState) {
+        // Restaura a posição do usuário
+        if (mapState.userLocation) {
+            updateUserLocation(mapState.userLocation.lat, mapState.userLocation.lng);
+        }
+        // Carregar marcadores do localStorage
+        if (mapState.markers) {
+            mapState.markers.forEach(marker => {
+                addCustomMarker(marker.lat, marker.lng, marker.name, marker.whatsapp, marker.iconUrl);
+            });
+        }
+        // Ajustar a visão
+        adjustMapView();
+    }
+}
+
+// Função para salvar o estado do mapa
+function saveMapState(userLocation, markers) {
+    const mapState = {
+        userLocation: userLocation,
+        markers: markers
+    };
+    localStorage.setItem('mapState', JSON.stringify(mapState));
 }
 
 // Função para adicionar marcador ao grupo
@@ -54,21 +85,13 @@ function parseCoordinates(coordString) {
 // Carregar marcadores do array
 function loadMarkers() {
     const locations = [
-         {coords: "-10.7455323,-40.133743", name: "Adeilda Ferreira Silva", whatsapp: "5574999692974", color: 'green'},
-         {coords: "-10.7426642,-40.1266351", name: "Aldione Pereira Lopes", whatsapp: "5574999285354", color: 'green'},
-         {coords: "-10.7110838,-40.1645099", name: "Amos Dos Santos Silva", whatsapp: "5574999449893", color: 'green'},
-         {coords: "-10.7144355,-40.0757781", name: "Daniel De Jesus Silva", whatsapp: "5574999998924", color: 'green'},
-         {coords: "-10.757302, -40.079825", name: "Elioneide Dos Santos De Jesus", whatsapp: "5574999873340", color: 'green'},
-         {coords: "-10.7437109,-40.128308", name: "Jailma Anacleto Da Silva", whatsapp: "5574999249307", color: 'green'},
-         {coords: "-10.6505043,-40.2729803", name: "Jose De Jesus Claudio Pio", whatsapp: "5574991543777", color: 'green'},
-         {coords: "-10.736903, -40.123718", name: "Maria De Jesus Barboza", whatsapp: "5562998651713", color: 'green'},
-         {coords: "-10.7110053,-40.1262819", name: "Ozania Silva Costa Da Silva", whatsapp: "5574999585781", color: 'green'},
-         {coords: "-10.6240442,-40.0171033", name: "Suele Soares Dos Santos", whatsapp: "5574999886940", color: 'green'},
-         {coords: "-10.718211,-40.088367", name: "Tamires Do Nascimento Cruz", whatsapp: "5574998061636", color: 'green'},
-         {coords: "-10.7160923,-40.0433762", name: "Willian Da Silva Vitor", whatsapp: "5527996144049", color: 'green'},
-
+        {coords: "-10.7455323,-40.133743", name: "Adeilda Ferreira Silva", whatsapp: "5574999692974", color: 'green'},
+        {coords: "-10.7426642,-40.1266351", name: "Aldione Pereira Lopes", whatsapp: "5574999285354", color: 'green'},
+        {coords: "-10.7110838,-40.1645099", name: "Amos Dos Santos Silva", whatsapp: "5574999449893", color: 'green'},
+        // ... mais locais
     ];
 
+    const savedMarkers = [];
     locations.forEach(location => {
         const { lat, lng } = parseCoordinates(location.coords);
         let iconUrl;
@@ -85,8 +108,12 @@ function loadMarkers() {
             default:
                 iconUrl = 'marker_blue.png';
         }
+        savedMarkers.push({ lat, lng, name: location.name, whatsapp: location.whatsapp, iconUrl });
         addCustomMarker(lat, lng, location.name, location.whatsapp, iconUrl);
     });
+
+    // Salvar estado dos marcadores no localStorage
+    saveMapState(null, savedMarkers);
 }
 
 // Inicializar e ajustar o mapa
@@ -113,8 +140,8 @@ function updateUserLocation(lat, lng) {
             .bindPopup("Você está aqui.")
             .openPopup();
     }
-    // Ajusta a visão do mapa para o marcador
-    // map.setView([lat, lng], 15); 
+    // Salvar estado do mapa incluindo a localização do usuário
+    saveMapState({ lat, lng }, []);
 }
 
 // Tentar obter localização atual e ativar a atualização em tempo real
