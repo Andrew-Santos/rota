@@ -98,10 +98,18 @@ function parseCoordinates(coordString) {
 // Carregar marcadores do array
 function loadMarkers() {
     const locations = [
-          {coords: "-8.6105364,-39.5198674", name: "Adriano Barbosa Pereira", whatsapp: "5587988010342", color: 'green'},
+         {coords: "-8.710860, -39.441042", name: "Adriana Dos Santos", whatsapp: "5587991251361", color: 'green'},
+         {coords: "-8.6105364,-39.5198674", name: "Adriano Barbosa Pereira", whatsapp: "5587988010342", color: 'green'},
          {coords: "-8.8678483,-39.7754617", name: "Edvania Da Silva Santos", whatsapp: "5587991623261", color: 'green'},
+         {coords: "-8.6993283,-39.510676", name: "Jivaldo Dias Dos Santos", whatsapp: "5587999065172", color: 'green'},
+         {coords: "-8.9974692,-39.9034064", name: "Joao Adriano Da Silva Ferreira", whatsapp: "5574999342025", color: 'green'},
+         {coords: "-9.4122783,-39.4747083", name: "Jorge Reis Dos Santos", whatsapp: "5574999128714", color: 'green'},
+         {coords: "-9.146513, -39.593613", name: "Josinaide Siqueira De Sena Jesus", whatsapp: "5574981491689", color: 'green'},
+         {coords: "-8.644028, -39.576403", name: "Laecio Da Silva Goncalves", whatsapp: "5587991313338", color: 'green'},
          {coords: "-8.7984569,-39.6545015", name: "Lucivan Gomes Da Silva", whatsapp: "5574981317148", color: 'green'},
          {coords: "-8.782540139219746,-39.572908940288876", name: "Paulo Da Costa Souza", whatsapp: "5574981191321", color: 'green'},
+         {coords: "-9.4121967,-39.474755", name: "Tamires Dos Santos Silva", whatsapp: "5574999728173", color: 'green'},
+
 
     ];
 
