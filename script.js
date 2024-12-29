@@ -98,7 +98,6 @@ function parseCoordinates(coordString) {
 // Carregar marcadores do array
 function loadMarkers() {
     const locations = [
-          {coords: "-8.9918883,-39.9008604", name: "Jacira Maria Dos Santos", whatsapp: "5574981239564", color: 'green'},
          {coords: "-9.1433748,-39.5467818", name: "Maria Barbosa Da Silva", whatsapp: "5574999798452", color: 'green'},
          {coords: "-9.146513, -39.593613", name: "Josinaide Siqueira De Sena Jesus", whatsapp: "5574981491689", color: 'green'},
          {coords: "-9.411032, -39.470468", name: "Assis Pereira De Araujo", whatsapp: "5574999679174", color: 'green'},
