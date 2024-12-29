@@ -106,7 +106,6 @@ function loadMarkers() {
          {coords: "-8.658748, -39.469559", name: "Romildo Jose Da Silva", whatsapp: "5587991804772", color: 'green'},
          {coords: "-8.661698, -39.615757", name: "Ildenice Menezes Silva Xavier", whatsapp: "5587981116598", color: 'green'},
          {coords: "-8.6624521,-39.6134007", name: "Mikaelle De Lima Silva", whatsapp: "5587999094650", color: 'green'},
-         {coords: "-8.664990, -39.679965", name: "Noe Freires Pereira", whatsapp: "5587991526381", color: 'green'},
          {coords: "-8.6655886,-39.6787854", name: "Jackson Nunes De Souza", whatsapp: "5587991764830", color: 'green'},
          {coords: "-8.6731341,-39.4439621", name: "Fatima Mayraelen Freire Da Silva", whatsapp: "5587991812651", color: 'green'},
          {coords: "-8.6734161,-39.443487", name: "Mikaely Katiney Freire Sa", whatsapp: "5575988924566", color: 'green'},
@@ -121,10 +120,8 @@ function loadMarkers() {
          {coords: "-8.701033, -39.519937", name: "Maria Das Dores Dias Caldas", whatsapp: "5587999608234", color: 'green'},
          {coords: "-8.710860, -39.441042", name: "Adriana Dos Santos", whatsapp: "5587991251361", color: 'green'},
          {coords: "-8.750805, -39.607176", name: "Taina Lopes Maciel", whatsapp: "5587988064384", color: 'green'},
-         {coords: "-8.777306, -39.664621", name: "Maria Das Dores Araujo Feitosa", whatsapp: "5574988461083", color: 'green'},
          {coords: "-8.782540139219746,-39.572908940288876", name: "Paulo Da Costa Souza", whatsapp: "5574981191321", color: 'green'},
-         {coords: "-8.864250, -39.697585", name: "Maria Jose Gomes De Oliveira", whatsapp: "5574981564422", color: 'green'},
-         {coords: "-8.8678483,-39.7754617", name: "Edvania Da Silva Santos", whatsapp: "5587991623261", color: 'green'},
+         {coords: "-8.9918883,-39.9008604", name: "Jacira Maria Dos Santos", whatsapp: "5574981239564", color: 'green'},
          {coords: "-9.1433748,-39.5467818", name: "Maria Barbosa Da Silva", whatsapp: "5574999798452", color: 'green'},
          {coords: "-9.146513, -39.593613", name: "Josinaide Siqueira De Sena Jesus", whatsapp: "5574981491689", color: 'green'},
          {coords: "-9.411032, -39.470468", name: "Assis Pereira De Araujo", whatsapp: "5574999679174", color: 'green'},
@@ -138,6 +135,7 @@ function loadMarkers() {
          {coords: "-9.447012, -39.586324", name: "Leunice Mesquita Franca", whatsapp: "5574999016899", color: 'green'},
          {coords: "-9.4582044,-39.425079", name: "Cleuza Santos Franca", whatsapp: "5574999430094", color: 'green'},
          {coords: "-9.497662, -39.588519", name: "Gilson Gomes Ferreira", whatsapp: "5574999190035", color: 'green'},
+
 
     ];
 
