@@ -1,95 +1,70 @@
-// Verifica se o navegador suporta Service Workers
 if ('serviceWorker' in navigator) {
-    // Registra o Service Worker para '/service-worker.js'
     navigator.serviceWorker.register('/service-worker.js')
         .then(() => console.log('Service Worker registrado com sucesso.'))
         .catch(err => console.error('Erro ao registrar o Service Worker:', err));
 }
 
-// Verifica novamente para registrar outro Service Worker
 if ('serviceWorker' in navigator) {
-    // Registra o Service Worker para '/sw.js'
-    navigator.serviceWorker.register('/sw.js')
-        .then(() => console.log("Service Worker registrado com sucesso."))
-        .catch(error => console.error("Falha ao registrar o Service Worker:", error));
+    navigator.serviceWorker.register('/sw.js').then(() => {
+        console.log("Service Worker registrado com sucesso.");
+    }).catch(error => {
+        console.error("Falha ao registrar o Service Worker:", error);
+    });
 }
 
-// Declaração de variáveis principais para o mapa e marcadores
-let map; // Referência ao mapa Leaflet
-let markersGroup; // Grupo de marcadores do Leaflet
-let userMarker; // Marcador da localização do usuário
 
-/**
- * Atualiza a posição do usuário no mapa.
- * @param {number} lat Latitude do usuário
- * @param {number} lng Longitude do usuário
- */
+
+let map;
+let markersGroup;
+let userMarker;
+
 function updateUserLocation(lat, lng) {
     if (userMarker) {
-        // Se o marcador do usuário já existe, atualiza sua posição
-        userMarker.setLatLng([lat, lng]);
+        userMarker.setLatLng([lat, lng]); // Atualiza o marcador existente
     } else {
-        // Cria um novo marcador para a posição do usuário
         const customIcon = L.divIcon({
-            className: 'current-location-marker', // Classe CSS personalizada
+            className: 'current-location-marker',
             iconSize: [20, 20]
         });
         userMarker = L.marker([lat, lng], { icon: customIcon })
-            .addTo(map) // Adiciona ao mapa
-            .bindPopup("Você está aqui.") // Popup informativo
-            .openPopup(); // Abre o popup automaticamente
+            .addTo(map)
+            .bindPopup("Você está aqui.")
+            .openPopup();
     }
-    // Centraliza o mapa na posição do usuário com um zoom de 15
-    map.setView([lat, lng], 15);
+    map.setView([lat, lng], 15); // Centraliza no marcador
 }
 
-// Monitora a localização do usuário em tempo real
+// Observe a localização do usuário em tempo real
 navigator.geolocation.watchPosition(
     (position) => {
         const { latitude, longitude } = position.coords;
-        updateUserLocation(latitude, longitude); // Atualiza a localização no mapa
+        updateUserLocation(latitude, longitude);
     },
     (error) => {
         console.error("Erro ao obter localização:", error);
     },
-    {
-        enableHighAccuracy: true, // Usa alta precisão para obter a localização
-        maximumAge: 10000, // Cache da localização por no máximo 10 segundos
-        timeout: 5000 // Tempo máximo para obter a localização
-    }
+    { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
 );
 
-/**
- * Inicializa o mapa.
- */
+// Função para inicializar o mapa
 function initializeMap() {
-    // Cria o mapa e associa ao elemento HTML com id 'map'
     map = L.map('map');
 
-    // Adiciona uma camada de tiles do OpenStreetMap
+    // Camada de tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18, // Zoom máximo permitido
+        maxZoom: 18,
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Inicializa o grupo de marcadores e adiciona ao mapa
+    // Inicializar o grupo de marcadores
     markersGroup = L.featureGroup().addTo(map);
 }
 
-/**
- * Adiciona um marcador personalizado ao mapa.
- * @param {number} lat Latitude do marcador
- * @param {number} lng Longitude do marcador
- * @param {string} popupText Texto do popup
- * @param {string} whatsappNumber Número do WhatsApp
- * @param {string} iconUrl URL do ícone do marcador
- */
+// Função para adicionar marcador ao grupo
 function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
-    // Links para navegação no Google Maps e WhatsApp
     const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
     const whatsappLink = `https://wa.me/${whatsappNumber}`;
 
-    // Conteúdo do popup associado ao marcador
     const popupContent = `
         <div>
             <p><strong>${popupText}</strong></p>
@@ -103,32 +78,24 @@ function addCustomMarker(lat, lng, popupText, whatsappNumber, iconUrl) {
         </div>
     `;
 
-    // Ícone personalizado para o marcador
     const icon = L.icon({
-        iconUrl: iconUrl, // URL do ícone
-        iconSize: [25, 41], // Tamanho do ícone
-        iconAnchor: [12, 41], // Âncora do ícone
-        popupAnchor: [0, -41] // Posição do popup em relação ao marcador
+        iconUrl: iconUrl,
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [0, -41]
     });
 
-    // Cria o marcador e associa ao grupo de marcadores
     const marker = L.marker([lat, lng], { icon: icon }).bindPopup(popupContent);
-    markersGroup.addLayer(marker);
+    markersGroup.addLayer(marker); // Adiciona o marcador ao grupo
 }
 
-/**
- * Processa uma string de coordenadas e retorna como um objeto.
- * @param {string} coordString String de coordenadas no formato "lat,lng"
- * @returns {Object} Objeto com latitude e longitude
- */
+// Função para processar as coordenadas
 function parseCoordinates(coordString) {
     const [lat, lng] = coordString.split(',').map(Number);
     return { lat, lng };
 }
 
-/**
- * Carrega marcadores de um array de locais.
- */
+// Carregar marcadores do array
 function loadMarkers() {
     const locations = [
          {coords: "-11.254485, -39.375203", name: "Carmem Araujo Gomes Oliveira", whatsapp: "55", color: 'blue'},
@@ -248,13 +215,102 @@ function loadMarkers() {
 
     ];
 
-    // Adiciona cada marcador ao mapa
     locations.forEach(location => {
         const { lat, lng } = parseCoordinates(location.coords);
-        addCustomMarker(lat, lng, location.name, location.whatsapp, location.color);
+        let iconUrl;
+        switch (location.color) {
+            case 'green':
+                iconUrl = 'marker_green.png';
+                break;
+            case 'blue':
+                iconUrl = 'marker_blue.png';
+                break;
+            case 'red':
+                iconUrl = 'marker_red.png';
+                break;
+            default:
+                iconUrl = 'marker_blue.png';
+        }
+        addCustomMarker(lat, lng, location.name, location.whatsapp, iconUrl);
     });
 }
 
-// Inicializa o mapa e carrega os marcadores
-initializeMap();
-loadMarkers();
+// Inicializar e ajustar o mapa
+function adjustMapView() {
+    if (markersGroup.getBounds().isValid()) {
+        map.fitBounds(markersGroup.getBounds());
+    }
+}
+
+// Função para atualizar a posição do marcador do usuário em tempo real
+function updateUserLocation(lat, lng) {
+    if (userMarker) {
+        // Se o marcador já existe, apenas atualiza a posição
+        userMarker.setLatLng([lat, lng]);
+    } else {
+        // Caso contrário, cria um novo marcador para a localização
+        const customIcon = L.divIcon({
+            className: 'current-location-marker',
+            iconSize: [20, 20]
+        });
+
+        userMarker = L.marker([lat, lng], { icon: customIcon })
+            .addTo(markersGroup)
+            .bindPopup("Você está aqui.")
+            .openPopup();
+    }
+    // Ajusta a visão do mapa para o marcador
+    // map.setView([lat, lng], 15); 
+}
+
+// Tentar obter localização atual e ativar a atualização em tempo real
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const { latitude, longitude } = position.coords;
+
+            initializeMap();
+
+            // Adicionar marcador de localização atual
+            updateUserLocation(latitude, longitude);
+
+            // Carregar marcadores do array
+            loadMarkers();
+
+            // Ajustar visão geral
+            adjustMapView();
+
+            // Iniciar atualização em tempo real
+            navigator.geolocation.watchPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    updateUserLocation(latitude, longitude);
+                },
+                (error) => {
+                    console.error("Erro ao obter localização em tempo real:", error);
+                },
+                {
+                    enableHighAccuracy: true,
+                    maximumAge: 10000,
+                    timeout: 5000
+                }
+            );
+        },
+        (error) => {
+            console.error("Erro ao obter localização atual:", error);
+
+            initializeMap();
+
+            // Carregar marcadores do array
+            loadMarkers();
+
+            // Ajustar visão geral
+            adjustMapView();
+        }
+    );
+} else {
+    alert("Geolocalização não é suportada pelo navegador.");
+    initializeMap();
+    loadMarkers();
+    adjustMapView();
+}
