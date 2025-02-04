@@ -99,11 +99,9 @@ function parseCoordinates(coordString) {
 function loadMarkers() {
     const locations = [
 
-
-
          {coords: "-10.015900, -39.500813", name: "Indriane Souza Silva", whatsapp: "5511986345601", color: 'green'},
          {coords: "-10.0174785,-39.498699", name: "Edneide Cardoso Da Silva", whatsapp: "5574998089249", color: 'green'},
-         {coords: "-10.079764, -39.551728", name: "Marluce Da Silva", whatsapp: "5574998096841", color: 'green'},
+         {coords: "-10.079764, -39.551728", name: "Marluce Da Silva", whatsapp: "5574998096841", color: 'blue'},
          {coords: "-10.093873, -39.631299", name: "Mariel Rodrigues Cardoso", whatsapp: "5574999509231", color: 'green'},
          {coords: "-10.228394, -39.376250", name: "Ana Lucia Da Silva Santos", whatsapp: "5575997058510", color: 'green'},
          {coords: "-10.252252, -39.458840", name: "Maria Ana Da Silva", whatsapp: "5575992222677", color: 'red'},
@@ -112,8 +110,8 @@ function loadMarkers() {
          {coords: "-10.3250772,-39.4302519", name: "Cosmia Das Neves Moura Dias", whatsapp: "5511964058975", color: 'red'},
          {coords: "-10.3408718,-39.6727925", name: "Reinan Da Silva Soares", whatsapp: "5574991245852", color: 'red'},
          {coords: "-10.439745, -39.331959", name: "Marilda Cardoso Batista", whatsapp: "5575992181642", color: 'green'},
-         {coords: "-10.443615, -39.330391", name: "Agnaldo De Jesus", whatsapp: "5575992895185", color: 'green'},
-         {coords: "-10.4603073,-39.5970963", name: "Cinthia Jesus Moraes", whatsapp: "5575991787464", color: 'green'},
+         {coords: "-10.443615, -39.330391", name: "Agnaldo De Jesus", whatsapp: "5575992895185", color: 'blue'},
+         {coords: "-10.4603073,-39.5970963", name: "Cinthia Jesus Moraes", whatsapp: "5575991787464", color: 'blue'},
          {coords: "-10.509976, -39.573976", name: "Joao Ferrer Pinto", whatsapp: "5575991170164", color: 'green'},
          {coords: "-10.510550,-39.202200", name: "Ivan De Jesus Souza", whatsapp: "5574999033237", color: 'green'},
          {coords: "-10.547687, -39.339912", name: "Alberto Jeremias Dos Santos", whatsapp: "5575999090484", color: 'green'},
