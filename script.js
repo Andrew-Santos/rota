@@ -127,6 +127,8 @@ function loadMarkers() {
          {coords: "-9.764406, -39.650505", name: "Tereza Barbosa De Almeida", whatsapp: "5574999833622", color: 'green'},
          {coords: "-9.8449642,-39.489498", name: "Vanuza Da Silva Matos", whatsapp: "5574999897549", color: 'green'},
          {coords: "-10.509976, -39.573976", name: "Joao Ferrer Pinto", whatsapp: "5575991170164", color: 'green'},
+         {coords: "-9.842003, -39.482028", name: "Edilene Silva Pereira", whatsapp: "5511995569362", color: 'green'},
+
 
     ];
 
