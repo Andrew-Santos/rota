@@ -104,6 +104,7 @@ function loadMarkers() {
          {coords: "-10.093873, -39.631299", name: "Mariel Rodrigues Cardoso", whatsapp: "5574999509231", color: 'green'},
          {coords: "-10.228394, -39.376250", name: "Ana Lucia Da Silva Santos", whatsapp: "5575997058510", color: 'green'},
          {coords: "-10.289240,-39.539910", name: "Maria Das Gracas Ribeiro", whatsapp: "5575991693061", color: 'green'},
+         {coords: "-10.321078, -39.545948", name: "Andressa Da Silva Santos", whatsapp: "5575991256847", color: 'green'},
          {coords: "-10.439745, -39.331959", name: "Marilda Cardoso Batista", whatsapp: "5575992181642", color: 'green'},
          {coords: "-10.510550,-39.202200", name: "Ivan De Jesus Souza", whatsapp: "5574999033237", color: 'green'},
          {coords: "-10.547687, -39.339912", name: "Alberto Jeremias Dos Santos", whatsapp: "5575999090484", color: 'green'},
