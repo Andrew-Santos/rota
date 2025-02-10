@@ -112,6 +112,7 @@ function loadMarkers() {
          {coords: "-11.955595,-40.174610", name: "Elisangela De Sousa Lima", whatsapp: "5574999219832", color: 'green'},
          {coords: "-11.955899,-40.172100", name: "Arlete Oliveira", whatsapp: "5574999530428", color: 'green'},
          {coords: "-11.961993,-40.170555", name: "Leila Oliveira De Souza", whatsapp: "5574999781247", color: 'green'},
+         {coords: "-11.963039, -40.105600", name: "Antonio Brito Silva", whatsapp: "5575999275569", color: 'green'},
 
     ];
 
