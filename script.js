@@ -100,15 +100,8 @@ function loadMarkers() {
     const locations = [
          {coords: "-11.961993,-40.170555", name: "Leila Oliveira De Souza", whatsapp: "5574999781247", color: 'green'},
          {coords: "-10.984134, -39.625778", name: "Jackson Nunes Da Silva Matos", whatsapp: "5575999573760", color: 'green'},
-         {coords: "-10.968856, -39.630020", name: "Maria Celidalva Mota Pastor", whatsapp: "5575998099126", color: 'green'},
-         {coords: "-10.974117,-39.623393", name: "Sueli Lima Da Silva", whatsapp: "5575999831482", color: 'green'},
-         {coords: "-10.816289,-39.657666", name: "Maria Da Soledade De Oliveira Araujo", whatsapp: "5575999031682", color: 'green'},
          {coords: "-11.057088, -39.593601", name: "Joanice Batista Dos Santos Silva", whatsapp: "5575997156435", color: 'green'},
-         {coords: "-10.974257,-39.623264", name: "Patricia Conceicao Ferreira", whatsapp: "5575999739891", color: 'green'},
-         {coords: "-10.835474, -39.642194", name: "Adriana Da Silva Santos", whatsapp: "5575997050786", color: 'green'},
          {coords: "-10.967140, -39.621390", name: "Jeane Nunes De Oliveira", whatsapp: "5575997057069", color: 'green'},
-         {coords: "-10.965438, -39.625003", name: "Veronilda Ferreira Dos Santos Oliveira", whatsapp: "5575997028129", color: 'green'},
-         {coords: "-10.968303, -39.622170", name: "Marcia Cristina Silva De Mattos", whatsapp: "5571997215372", color: 'green'},
 
     ];
 
