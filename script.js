@@ -105,8 +105,12 @@ function loadMarkers() {
          {coords: "-11.432682, -38.244623", name: "Rodrigo Souza Dos Reis", whatsapp: "5575997154296", color: 'green'},
          {coords: "-11.4451983,-38.213675", name: "Jose Anildo De Souza Jesus", whatsapp: "5575999253417", color: 'green'},
          {coords: "-11.447317, -38.215567", name: "Maria Pereira De Souza", whatsapp: "5575998795817", color: 'green'},
+         {coords: "-11.4671998,-38.1427117", name: "Mariane Rodrigues De Carvalho", whatsapp: "5575997040995", color: 'green'},
+         {coords: "-11.470030, -38.141071", name: "Josefa Maria Francisca Dos Santos", whatsapp: "5575991436538", color: 'green'},
+         {coords: "-11.478733, -38.201460", name: "Josefa Maria Mendes De Araujo", whatsapp: "5571999869043", color: 'green'},
          {coords: "-11.504669, -38.155945", name: "Cristina Damiana Dantas Da Silva", whatsapp: "5575997095764", color: 'green'},
          {coords: "-11.512992, -38.151506", name: "Ivanira De Souza Monte", whatsapp: "5575998283775", color: 'green'},
+         {coords: "-11.513124, -38.150485", name: "Maria Elizabete Paulo Dos Santos", whatsapp: "5575999448124", color: 'green'},
          {coords: "-11.518164, -38.156283", name: "Damiao Morais Da Silva", whatsapp: "5575998331134", color: 'green'},
          {coords: "-11.530587, -38.139527", name: "Cristiane Oliveira Da Paixao", whatsapp: "5575999650224", color: 'green'},
          {coords: "-11.612222,-38.2193925", name: "Elenilda Maria De Souza", whatsapp: "5575999848734", color: 'green'},
@@ -121,7 +125,6 @@ function loadMarkers() {
          {coords: "-11.753687, -38.152508", name: "Amanda De Oliveira Vasconcelos", whatsapp: "5575991872876", color: 'green'},
          {coords: "-11.815927, -38.272162", name: "Adenise Conceicao Da Silva", whatsapp: "5575998033786", color: 'green'},
          {coords: "-11.961993,-40.170555", name: "Leila Oliveira De Souza", whatsapp: "5574999781247", color: 'green'},
-         {coords: "-9.6129665374756,-35.748653411865", name: "Vanusa Francisca Dos Santos", whatsapp: "5575998207690", color: 'green'},
 
     ];
 
