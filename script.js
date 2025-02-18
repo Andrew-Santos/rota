@@ -98,31 +98,23 @@ function parseCoordinates(coordString) {
 // Carregar marcadores do array
 function loadMarkers() {
     const locations = [
-                
+                        
          {coords: "-11.961993,-40.170555", name: "Leila Oliveira De Souza", whatsapp: "5574999781247", color: 'green'},
          {coords: "-11.666497, -38.085366", name: "Andrea Conceicao De Jesus", whatsapp: "5575999117361", color: 'green'},
          {coords: "-11.656149, -38.073331", name: "Antonio Cesar Pereira Santos", whatsapp: "5575999613757", color: 'green'},
          {coords: "-11.716635, -38.227237", name: "Maria Do Carmo Dos Santos", whatsapp: "5575998457619", color: 'green'},
          {coords: "-11.753687, -38.152508", name: "Amanda De Oliveira Vasconcelos", whatsapp: "5575991872876", color: 'green'},
          {coords: "-11.673615,-38.166283", name: "Jose Nascimento Goncalves Almeida", whatsapp: "5575999266353", color: 'green'},
-         {coords: "-11.504669, -38.155945", name: "Cristina Damiana Dantas Da Silva", whatsapp: "5575997095764", color: 'green'},
-         {coords: "-11.5103388,-38.1478077", name: "Vanusa Francisca Dos Santos", whatsapp: "5575998207690", color: 'green'},
-         {coords: "-11.4671998,-38.1427117", name: "Mariane Rodrigues De Carvalho", whatsapp: "5575997040995", color: 'green'},
          {coords: "-11.659697, -38.272396", name: "Josival Rodrigues Da Silva", whatsapp: "5511948850887", color: 'green'},
          {coords: "-11.700743, -38.267406", name: "Jose Roberto Dos Santos", whatsapp: "5575991226123", color: 'green'},
          {coords: "-11.652791, -38.149528", name: "Francisco Goncalves Dantas", whatsapp: "5575999506787", color: 'green'},
          {coords: "-11.734710, -38.161572", name: "Jose Carlos Da Silva", whatsapp: "5575991328174", color: 'green'},
-         {coords: "-11.437846, -38.237081", name: "Josefa Dos Santos Silva", whatsapp: "5575999029712", color: 'green'},
-         {coords: "-11.513124, -38.150485", name: "Maria Elizabete Paulo Dos Santos", whatsapp: "5575999448124", color: 'green'},
+        
          {coords: "-11.518164, -38.156283", name: "Damiao Morais Da Silva", whatsapp: "5575998331134", color: 'green'},
-         {coords: "-11.512992, -38.151506", name: "Ivanira De Souza Monte", whatsapp: "5575998283775", color: 'green'},
          {coords: "-11.5162018,-38.1548518", name: "Jerson Moreira Neves", whatsapp: "5575998066403", color: 'green'},
-         {coords: "-11.439657, -38.237815", name: "Alcione Batista Nunes", whatsapp: "5575998000094", color: 'green'},
          {coords: "-11.612222,-38.2193925", name: "Elenilda Maria De Souza", whatsapp: "5575999848734", color: 'green'},
          {coords: "-11.651715, -38.063605", name: "Geovana De Souza Anjinho", whatsapp: "5575999014763", color: 'green'},
-         {coords: "-11.511544, -38.149941", name: "Maria Do Carmo De Oliveira", whatsapp: "5575998451151", color: 'green'},
          {coords: "-11.6586563,-38.0694534", name: "Adriana Gomes Dos Santos", whatsapp: "5575997013980", color: 'green'},
-         {coords: "-11.470030, -38.141071", name: "Josefa Maria Francisca Dos Santos", whatsapp: "5575991436538", color: 'green'},
 
 
     ];
