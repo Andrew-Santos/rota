@@ -99,7 +99,7 @@ function parseCoordinates(coordString) {
 function loadMarkers() {
     const locations = [
                         
-         {coords: "-11.961993,-40.170555", name: "Leila Oliveira De Souza", whatsapp: "5574999781247", color: 'green'},
+
          {coords: "-11.666497, -38.085366", name: "Andrea Conceicao De Jesus", whatsapp: "5575999117361", color: 'green'},
          {coords: "-11.656149, -38.073331", name: "Antonio Cesar Pereira Santos", whatsapp: "5575999613757", color: 'green'},
          {coords: "-11.716635, -38.227237", name: "Maria Do Carmo Dos Santos", whatsapp: "5575998457619", color: 'green'},
@@ -115,7 +115,6 @@ function loadMarkers() {
          {coords: "-11.612222,-38.2193925", name: "Elenilda Maria De Souza", whatsapp: "5575999848734", color: 'green'},
          {coords: "-11.651715, -38.063605", name: "Geovana De Souza Anjinho", whatsapp: "5575999014763", color: 'green'},
          {coords: "-11.6586563,-38.0694534", name: "Adriana Gomes Dos Santos", whatsapp: "5575997013980", color: 'green'},
-
 
     ];
 
