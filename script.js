@@ -107,7 +107,6 @@ function loadMarkers() {
          {coords: "-11.673615,-38.166283", name: "Jose Nascimento Goncalves Almeida", whatsapp: "5575999266353", color: 'green'},
          {coords: "-11.659697, -38.272396", name: "Josival Rodrigues Da Silva", whatsapp: "5511948850887", color: 'green'},
          {coords: "-11.700743, -38.267406", name: "Jose Roberto Dos Santos", whatsapp: "5575991226123", color: 'green'},
-         {coords: "-11.652791, -38.149528", name: "Francisco Goncalves Dantas", whatsapp: "5575999506787", color: 'green'},
          {coords: "-11.734710, -38.161572", name: "Jose Carlos Da Silva", whatsapp: "5575991328174", color: 'green'},
         
          {coords: "-11.518164, -38.156283", name: "Damiao Morais Da Silva", whatsapp: "5575998331134", color: 'green'},
